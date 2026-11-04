@@ -18,6 +18,8 @@ test("change request → invoice → decline → pay → payout", async ({ page,
   await page.getByRole("button", { name: "Create invoice & send" }).click();
   await expect(page.getByText(/Change-order invoice .* sent · \$1,700\.00/)).toBeVisible();
   await expect(page.getByText("🔒 Gift-card page").first()).toBeVisible();
+  // The guide moves on to the client paying.
+  await expect(page.getByRole("link", { name: /Open pay page/ })).toBeVisible();
 
   const state = await (await request.get("/api/project/demo")).json();
   const invoice = state.invoices.find((i: { kind: string }) => i.kind === "change_order");
@@ -39,10 +41,12 @@ test("change request → invoice → decline → pay → payout", async ({ page,
   await expect(page.getByText("Gift-card page", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("🔒 Gift-card page")).toHaveCount(0);
 
-  await page.getByRole("tab", { name: /Payouts/ }).click();
+  await page.getByRole("button", { name: "Pay the team", exact: true }).click();
+  await expect(page.getByRole("tab", { name: /Pay the team/ })).toHaveAttribute("aria-selected", "true");
   await expect(page.getByText("Adds up to the cent", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: /Pay contractors/ }).click();
   await expect(page.getByText("Payout batch SUCCESS")).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText(/All done: the extra work was priced, paid for and paid out/)).toBeVisible({ timeout: 15_000 });
 
   const again = await request.post("/api/payouts", { data: { invoiceId: invoice.id } });
   expect(again.status()).toBe(409);
