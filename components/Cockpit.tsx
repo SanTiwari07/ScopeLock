@@ -9,6 +9,7 @@ import { formatUSD } from "@/lib/domain/money";
 import { ActivityDrawer } from "./activity/ActivityDrawer";
 import { InvoiceList } from "./invoices/InvoiceList";
 import { JudgeGuide } from "./JudgeGuide";
+import { NextStep, type CockpitTab } from "./NextStep";
 import { PayoutPanel } from "./payouts/PayoutPanel";
 import { ScopeChangePanel } from "./scope/ScopeChangePanel";
 import { Alert, Button, Modal, SegmentedTabs, statusBadge, ToastProvider, useToast, Wordmark, Badge } from "./ui";
@@ -23,7 +24,13 @@ const LedgerGrid = dynamic(() => import("./ledger/LedgerGrid"), {
   loading: () => <SkeletonRows />,
 });
 
-type Tab = "change" | "invoices" | "payouts";
+type Tab = CockpitTab;
+
+const TAB_INTRO: Record<Tab, string> = {
+  change: "Paste what the client asked for. The AI lists the work, the app prices it, and one click sends a PayPal invoice.",
+  invoices: "Every invoice sent to the client. Open a pay page to pay it the way the client would.",
+  payouts: "Once the client has paid, check the split and send each contractor their share with PayPal Payouts.",
+};
 
 function SkeletonRows() {
   return (
@@ -188,13 +195,20 @@ function CockpitInner({ projectId }: { projectId: string }) {
       )}
       <p className="t-body-sm px-6 pt-3 text-ink-muted min-[1100px]:hidden">Best viewed on a laptop or wider screen.</p>
 
+      <div className="px-4 pt-4 sm:px-6 sm:pt-6">
+        <NextStep state={state} onGoTo={setTab} />
+      </div>
+
       <main className="grid grid-cols-1 gap-4 p-4 sm:p-6 min-[1100px]:grid-cols-[minmax(560px,3fr)_minmax(400px,2fr)]">
         {/* Timeline */}
         <section className="panel flex min-w-0 flex-col min-[1100px]:h-[min(720px,calc(100vh-160px))]" aria-labelledby="timeline-title">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 id="timeline-title" className="t-title-md">
-              Timeline
-            </h2>
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 id="timeline-title" className="t-title-md">
+                Project timeline
+              </h2>
+              <p className="t-body-sm text-ink-muted">Each bar is a task. 🔒 Locked tasks wait until the client pays their invoice.</p>
+            </div>
             <span className="t-body-sm flex items-center gap-3 text-ink-muted">
               <Legend />
             </span>
@@ -212,13 +226,14 @@ function CockpitInner({ projectId }: { projectId: string }) {
               value={tab}
               onChange={setTab}
               tabs={[
-                { id: "change", label: "Change request" },
+                { id: "change", label: "Client request" },
                 { id: "invoices", label: "Invoices", count: openInvoices },
-                { id: "payouts", label: "Payouts", count: paidInvoices },
+                { id: "payouts", label: "Pay the team", count: paidInvoices },
               ]}
             />
           </div>
           <div role="tabpanel" id={`tabpanel-${tab}`} aria-labelledby={`tab-${tab}`} className="-mx-2 flex-1 overflow-auto px-2 pb-2">
+            <p className="t-body-sm mb-4 text-ink-muted">{TAB_INTRO[tab]}</p>
             {tab === "change" && <ScopeChangePanel state={state} onChanged={refresh} />}
             {tab === "invoices" && <InvoiceList state={state} onChanged={refresh} />}
             {tab === "payouts" && <PayoutPanel state={state} onChanged={refresh} />}
@@ -227,9 +242,12 @@ function CockpitInner({ projectId }: { projectId: string }) {
 
         {/* Ledger */}
         <section className="panel min-w-0 min-[1100px]:col-span-2" aria-labelledby="ledger-title">
-          <h2 id="ledger-title" className="t-title-md mb-4">
-            Ledger
-          </h2>
+          <div className="mb-4">
+            <h2 id="ledger-title" className="t-title-md">
+              Money log
+            </h2>
+            <p className="t-body-sm text-ink-muted">Every invoice, payment and payout, with its PayPal reference ID.</p>
+          </div>
           <LedgerGrid rows={state.ledger} />
         </section>
       </main>
