@@ -113,8 +113,10 @@ export default function LedgerGrid({ rows }: { rows: LedgerRow[] }) {
         field: "reference",
         headerName: "Reference",
         width: 230,
+        // The totals text must be the cell's value: AG Grid only re-renders a cell when its value changes.
+        valueGetter: (p) => (p.data?.isTotal ? p.data.totalsText : p.data?.reference),
         cellRenderer: (p: ICellRendererParams<Row>) =>
-          p.data?.isTotal ? <span className="t-body-sm font-bold">{p.data.totalsText}</span> : p.value ? <CopyId value={p.value} max={20} /> : <span className="text-ink-subtle">—</span>,
+          p.data?.isTotal ? <span className="t-body-sm font-bold">{p.value}</span> : p.value ? <CopyId value={p.value} max={20} /> : <span className="text-ink-subtle">—</span>,
         colSpan: (p) => (p.data?.isTotal ? 3 : 1),
       },
       { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
