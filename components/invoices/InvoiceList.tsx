@@ -1,6 +1,8 @@
 "use client";
 
-import { Bell, ExternalLink, FileText, RefreshCw, Send } from "lucide-react";
+import clsx from "clsx";
+import { ArrowRight, Bell, ExternalLink, FileText, RefreshCw, Send } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import type { InvoiceDTO, ProjectState } from "@/lib/api-types";
 import { formatUSD } from "@/lib/domain/money";
@@ -14,7 +16,7 @@ export function InvoiceList({ state, onChanged }: { state: ProjectState; onChang
     return <EmptyState icon={<FileText size={40} />} title="No invoices yet">Create a change-order invoice to get started.</EmptyState>;
   }
   return (
-    <div className="flex flex-col gap-3">
+    <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
       {invoices.map((inv) => (
         <InvoiceCard key={inv.id} inv={inv} onChanged={onChanged} onRemind={() => setRemindFor(inv)} />
       ))}
@@ -41,10 +43,16 @@ function InvoiceCard({ inv, onChanged, onRemind }: { inv: InvoiceDTO; onChanged:
   }
 
   return (
-    <div className="rounded-sm border border-hairline p-4">
+    <div
+      className={clsx(
+        "relative overflow-hidden rounded-md border border-hairline bg-canvas p-5 pl-6",
+        "before:absolute before:inset-y-0 before:left-0 before:w-1.5",
+        inv.status === "PAID" ? "before:bg-success" : inv.status === "SENT" ? "before:bg-warning" : "before:bg-info",
+      )}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="font-bold">{inv.title}</div>
+          <div className="line-clamp-2 font-bold" title={inv.title}>{inv.title}</div>
           <div className="t-body-sm mt-0.5 flex flex-wrap items-center gap-x-2 text-ink-muted">
             {inv.invoiceNumber && <span className="t-mono">#{inv.invoiceNumber}</span>}
             <span>{inv.kind === "milestone" ? "Milestone" : "Change order"}</span>
@@ -53,10 +61,21 @@ function InvoiceCard({ inv, onChanged, onRemind }: { inv: InvoiceDTO; onChanged:
           </div>
         </div>
         <div className="text-right">
-          <div className="font-bold tabular">{formatUSD(inv.totalCents)}</div>
+          <div className="t-title-lg">{formatUSD(inv.totalCents)}</div>
           <StatusBadge value={inv.status} className="mt-1" />
         </div>
       </div>
+
+      {inv.kind === "change_order" && inv.items.length > 0 && (
+        <ul className="t-body-sm mt-3 flex flex-col gap-1 rounded-sm bg-surface-warm p-3">
+          {inv.items.map((l, i) => (
+            <li key={i} className="flex justify-between gap-3">
+              <span className="truncate">{l.title}</span>
+              <span className="shrink-0 tabular text-ink-muted">{formatUSD(l.amountCents)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
         {inv.paypalInvoiceId && <CopyId value={inv.paypalInvoiceId} max={22} />}
@@ -72,9 +91,9 @@ function InvoiceCard({ inv, onChanged, onRemind }: { inv: InvoiceDTO; onChanged:
             </Button>
           )}
           {inv.status !== "DRAFT" && (
-            <a className="btn btn-secondary btn-sm" href={`/pay/${inv.id}`} target="_blank" rel="noreferrer">
-              Client pay page <ExternalLink size={14} aria-hidden />
-            </a>
+            <Link className={inv.status === "SENT" ? "btn btn-primary btn-sm" : "btn btn-secondary btn-sm"} href={`/pay/${inv.id}`}>
+              {inv.status === "SENT" ? "Pay as the client" : "Client view"} <ArrowRight size={14} aria-hidden />
+            </Link>
           )}
           {inv.payerViewUrl && (
             <a className="btn btn-outline btn-sm" href={inv.payerViewUrl} target="_blank" rel="noreferrer">

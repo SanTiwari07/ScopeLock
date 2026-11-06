@@ -11,14 +11,29 @@ import { api, ApiRequestError } from "../useProject";
 
 const FINAL = new Set(["SUCCESS", "DENIED", "CANCELED"]);
 
-export function PayoutPanel({ state, onChanged }: { state: ProjectState; onChanged: () => Promise<void> }) {
+export function PayoutPanel({
+  state,
+  onChanged,
+}: {
+  state: ProjectState;
+  onChanged: () => Promise<void>;
+}) {
   const candidates = state.invoices.filter((i) => !i.seeded && i.status !== "DRAFT").reverse();
-  const defaultId = (candidates.find((i) => i.status === "PAID" && !i.payoutBatchId) ?? candidates.find((i) => i.status === "PAID") ?? candidates[0])?.id ?? null;
+  const defaultId =
+    (
+      candidates.find((i) => i.status === "PAID" && !i.payoutBatchId) ??
+      candidates.find((i) => i.status === "PAID") ??
+      candidates[0]
+    )?.id ?? null;
   const [invoiceId, setInvoiceId] = useState<string | null>(defaultId);
   const selected = candidates.find((i) => i.id === invoiceId) ? invoiceId : defaultId;
 
   if (!selected) {
-    return <EmptyState icon={<Wallet size={40} />} title="Nothing to pay out yet">Once a client pays an invoice, its contractor split shows up here.</EmptyState>;
+    return (
+      <EmptyState icon={<Wallet size={40} />} title="Nothing to pay out yet">
+        Once a client pays an invoice, its contractor split shows up here.
+      </EmptyState>
+    );
   }
   return (
     <div className="flex flex-col gap-4">
@@ -26,21 +41,40 @@ export function PayoutPanel({ state, onChanged }: { state: ProjectState; onChang
         <label htmlFor="payout-invoice" className="t-label mb-2 block">
           Invoice
         </label>
-        <select id="payout-invoice" className="field" value={selected} onChange={(e) => setInvoiceId(e.target.value)}>
+        <select
+          id="payout-invoice"
+          className="field"
+          value={selected}
+          onChange={(e) => setInvoiceId(e.target.value)}
+        >
           {candidates.map((i) => (
             <option key={i.id} value={i.id}>
               {i.invoiceNumber ? `#${i.invoiceNumber} · ` : ""}
-              {i.title.slice(0, 60)} · {formatUSD(i.totalCents)} · {i.status === "PAID" ? (i.payoutBatchId ? "paid out" : "paid") : "unpaid"}
+              {i.title.slice(0, 60)} · {formatUSD(i.totalCents)} ·{" "}
+              {i.status === "PAID" ? (i.payoutBatchId ? "paid out" : "paid") : "unpaid"}
             </option>
           ))}
         </select>
       </div>
-      <PayoutDetail key={selected} invoiceId={selected} invoiceStatus={candidates.find((c) => c.id === selected)!.status} onChanged={onChanged} />
+      <PayoutDetail
+        key={selected}
+        invoiceId={selected}
+        invoiceStatus={candidates.find((c) => c.id === selected)!.status}
+        onChanged={onChanged}
+      />
     </div>
   );
 }
 
-function PayoutDetail({ invoiceId, invoiceStatus, onChanged }: { invoiceId: string; invoiceStatus: string; onChanged: () => Promise<void> }) {
+function PayoutDetail({
+  invoiceId,
+  invoiceStatus,
+  onChanged,
+}: {
+  invoiceId: string;
+  invoiceStatus: string;
+  onChanged: () => Promise<void>;
+}) {
   const toast = useToast();
   const [preview, setPreview] = useState<PayoutPreviewResponse | null>(null);
   const [batch, setBatch] = useState<PayoutBatchDTO | null>(null);
@@ -83,7 +117,11 @@ function PayoutDetail({ invoiceId, invoiceStatus, onChanged }: { invoiceId: stri
         const b = await api<PayoutBatchDTO>(`/api/payouts/${batch.id}`);
         setBatch(b);
         if (FINAL.has(b.status)) {
-          toast({ tone: b.status === "SUCCESS" ? "success" : "error", message: `Payout batch ${b.status}`, ref: b.paypalBatchId });
+          toast({
+            tone: b.status === "SUCCESS" ? "success" : "error",
+            message: `Payout batch ${b.status}`,
+            ref: b.paypalBatchId,
+          });
           await onChanged();
         }
       } catch (e) {
@@ -127,119 +165,144 @@ function PayoutDetail({ invoiceId, invoiceStatus, onChanged }: { invoiceId: stri
   const basis = preview.capturedCents ?? sharesTotal + preview.marginCents;
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* 1. Split */}
-      <div>
-        <div className="mb-2 flex items-end justify-between">
-          <div>
-            <div className="t-label text-ink-muted">{preview.capturedCents !== null ? "Captured" : "Invoice total (not captured yet)"}</div>
-            <div className="t-title-lg">{formatUSD(basis)}</div>
+    <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+      <div className="flex flex-col gap-4">
+        {/* 1. Split */}
+        <div>
+          <div className="mb-2 flex items-end justify-between">
+            <div>
+              <div className="t-label text-ink-muted">
+                {preview.capturedCents !== null ? "Captured" : "Invoice total (not captured yet)"}
+              </div>
+              <div className="t-title-lg">{formatUSD(basis)}</div>
+            </div>
           </div>
-        </div>
-        <table className="t-body-sm w-full border-collapse">
-          <thead>
-            <tr className="t-label text-left text-ink-muted">
-              <th className="pb-2 font-bold">Contractor</th>
-              <th className="pb-2 text-right font-bold">Share</th>
-              <th className="pb-2 text-right font-bold">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {preview.split.map((s) => (
-              <tr key={s.contractorId} className="border-t border-hairline">
-                <td className="py-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="t-label flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-tint" aria-hidden>
-                      {s.name.split(" ").map((p) => p[0]).join("")}
-                    </span>
-                    <div className="min-w-0">
-                      <div className="font-bold">{s.name}</div>
-                      <div className="truncate text-ink-muted">
-                        {s.title} · {s.email || "no email"}
+          <table className="t-body-sm w-full border-collapse">
+            <thead>
+              <tr className="t-label text-left text-ink-muted">
+                <th className="pb-2 font-bold">Contractor</th>
+                <th className="pb-2 text-right font-bold">Share</th>
+                <th className="pb-2 text-right font-bold">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {preview.split.map((s) => (
+                <tr key={s.contractorId} className="border-t border-hairline">
+                  <td className="py-2.5">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="t-label flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-tint"
+                        aria-hidden
+                      >
+                        {s.name
+                          .split(" ")
+                          .map((p) => p[0])
+                          .join("")}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="font-bold">{s.name}</div>
+                        <div className="truncate text-ink-muted">
+                          {s.title} · {s.email || "no email"}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td className="py-2.5 text-right tabular">{((s.splitBps * (10000 - preview.marginBps)) / 1_000_000).toFixed(0)}%</td>
-                <td className="py-2.5 text-right font-bold tabular">{formatUSD(s.amountCents)}</td>
+                  </td>
+                  <td className="py-2.5 text-right tabular">
+                    {((s.splitBps * (10000 - preview.marginBps)) / 1_000_000).toFixed(0)}%
+                  </td>
+                  <td className="py-2.5 text-right font-bold tabular">
+                    {formatUSD(s.amountCents)}
+                  </td>
+                </tr>
+              ))}
+              <tr className="border-t border-hairline text-ink-muted">
+                <td className="py-2.5">Agency margin (retained)</td>
+                <td className="py-2.5 text-right tabular">{preview.marginBps / 100}%</td>
+                <td className="py-2.5 text-right tabular">{formatUSD(preview.marginCents)}</td>
               </tr>
-            ))}
-            <tr className="border-t border-hairline text-ink-muted">
-              <td className="py-2.5">Agency margin (retained)</td>
-              <td className="py-2.5 text-right tabular">{preview.marginBps / 100}%</td>
-              <td className="py-2.5 text-right tabular">{formatUSD(preview.marginCents)}</td>
-            </tr>
-            <tr className="border-t border-ink font-bold">
-              <td className="py-2.5">
-                {sharesTotal + preview.marginCents === basis && (
-                  <span className="inline-flex items-center gap-1 text-success">
-                    <CircleCheck size={16} aria-hidden /> Adds up to the cent
-                  </span>
-                )}
-              </td>
-              <td />
-              <td className="py-2.5 text-right tabular">{formatUSD(sharesTotal + preview.marginCents)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* 2. Checklist (once a batch exists, the only "failing" check is the idempotency guard) */}
-      {batch ? (
-        <Alert tone="info" title="Already paid out">
-          All six checks passed before this batch was sent. A second payout for this invoice is blocked, here and by PayPal&apos;s
-          sender_batch_id.
-        </Alert>
-      ) : (
-        <Checklist checks={preview.checks} />
-      )}
-
-      {/* 3. Pay button */}
-      {!batch && (
-        <div className="flex flex-col gap-2">
-          <Button variant="primary" size="lg" className="w-full" icon={<Send size={20} aria-hidden />} loading={sending} disabled={!preview.canPay} onClick={pay}>
-            {sending ? "Sending…" : `Pay contractors ${formatUSD(sharesTotal)}`}
-          </Button>
-          {!preview.canPay && (
-            <p className="t-body-sm text-center text-danger">
-              {failing.length} check{failing.length === 1 ? "" : "s"} failing
-              {invoiceStatus !== "PAID" && " · the client hasn't paid this invoice yet"}
-            </p>
-          )}
+              <tr className="border-t border-ink font-bold">
+                <td className="py-2.5">
+                  {sharesTotal + preview.marginCents === basis && (
+                    <span className="inline-flex items-center gap-1 text-success">
+                      <CircleCheck size={16} aria-hidden /> Adds up to the cent
+                    </span>
+                  )}
+                </td>
+                <td />
+                <td className="py-2.5 text-right tabular">
+                  {formatUSD(sharesTotal + preview.marginCents)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      )}
 
-      {error && (
-        <Alert tone="danger" title="Payout problem">
-          {error.message}
-          {error.debugId && <div className="t-mono mt-1">paypal-debug-id: {error.debugId}</div>}
-        </Alert>
-      )}
-
-      {/* 4. Batch status */}
-      {batch && (
-        <div className="rounded-md border border-hairline p-4" aria-live="polite">
-          {polling && <div className="indeterminate mb-3" aria-hidden />}
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <span className="font-bold">Payout batch</span>
-              <StatusBadge value={batch.status} />
-            </div>
-            {batch.paypalBatchId && <CopyId value={batch.paypalBatchId} />}
+        {/* 3. Pay button */}
+        {!batch && (
+          <div className="flex flex-col gap-2">
+            <Button
+              variant="primary"
+              size="lg"
+              className="w-full"
+              icon={<Send size={20} aria-hidden />}
+              loading={sending}
+              disabled={!preview.canPay}
+              onClick={pay}
+            >
+              {sending ? "Sending…" : `Pay contractors ${formatUSD(sharesTotal)}`}
+            </Button>
+            {!preview.canPay && (
+              <p className="t-body-sm text-center text-danger">
+                {failing.length} check{failing.length === 1 ? "" : "s"} failing
+                {invoiceStatus !== "PAID" && " · the client hasn't paid this invoice yet"}
+              </p>
+            )}
           </div>
-          <ul className="flex flex-col gap-2">
-            {batch.items.map((i) => (
-              <li key={i.id} className="t-body-sm flex items-center justify-between gap-2">
-                <span>{i.contractorName}</span>
-                <span className="flex items-center gap-2">
-                  <span className="tabular">{formatUSD(i.amountCents)}</span>
-                  <StatusBadge value={i.status} />
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+        )}
+
+        {error && (
+          <Alert tone="danger" title="Payout problem">
+            {error.message}
+            {error.debugId && <div className="t-mono mt-1">paypal-debug-id: {error.debugId}</div>}
+          </Alert>
+        )}
+
+        {/* 4. Batch status */}
+        {batch && (
+          <div className="rounded-md border border-hairline p-4" aria-live="polite">
+            {polling && <div className="indeterminate mb-3" aria-hidden />}
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="font-bold">Payout batch</span>
+                <StatusBadge value={batch.status} />
+              </div>
+              {batch.paypalBatchId && <CopyId value={batch.paypalBatchId} />}
+            </div>
+            <ul className="flex flex-col gap-2">
+              {batch.items.map((i) => (
+                <li key={i.id} className="t-body-sm flex items-center justify-between gap-2">
+                  <span>{i.contractorName}</span>
+                  <span className="flex items-center gap-2">
+                    <span className="tabular">{formatUSD(i.amountCents)}</span>
+                    <StatusBadge value={i.status} />
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+      <div className="flex flex-col gap-4">
+        {/* 2. Checklist (once a batch exists, the only "failing" check is the idempotency guard) */}
+        {batch ? (
+          <Alert tone="info" title="Already paid out">
+            All six checks passed before this batch was sent. A second payout for this invoice is
+            blocked, here and by PayPal&apos;s sender_batch_id.
+          </Alert>
+        ) : (
+          <Checklist checks={preview.checks} />
+        )}
+      </div>
     </div>
   );
 }
@@ -247,10 +310,18 @@ function PayoutDetail({ invoiceId, invoiceStatus, onChanged }: { invoiceId: stri
 function Checklist({ checks }: { checks: Check[] }) {
   return (
     <div className="overflow-hidden rounded-md border border-hairline">
-      <div className="t-label border-b border-hairline bg-surface-warm px-4 py-2">Pre-payout checks (deterministic, code only)</div>
+      <div className="t-label border-b border-hairline bg-surface-warm px-4 py-2">
+        Safety checks before money moves (code, not AI)
+      </div>
       <ul>
         {checks.map((c) => (
-          <li key={c.id} className={clsx("flex gap-3 border-b border-hairline px-4 py-3 last:border-b-0", !c.pass && "bg-danger-soft")}>
+          <li
+            key={c.id}
+            className={clsx(
+              "flex gap-3 border-b border-hairline px-4 py-3 last:border-b-0",
+              !c.pass && "bg-danger-soft",
+            )}
+          >
             {c.pass ? (
               <CircleCheck size={20} className="mt-0.5 shrink-0 text-success" aria-label="Passed" />
             ) : (

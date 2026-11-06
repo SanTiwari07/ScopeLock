@@ -1,6 +1,8 @@
-import { Cockpit } from "@/components/Cockpit";
+import type { Metadata } from "next";
+import { OverviewPage } from "@/components/pages/Overview";
 
-export default async function ProjectPage({ params }: { params: Promise<{ projectId: string }> }) {
-  const { projectId } = await params;
-  return <Cockpit projectId={projectId} />;
+export const metadata: Metadata = { title: "Overview" };
+
+export default function Page() {
+  return <OverviewPage />;
 }
