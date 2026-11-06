@@ -12,14 +12,14 @@ test("landing → change request → invoice → decline → pay → payout", as
 
   // Overview: next step points at pricing the request; the locked phase is visible.
   await expect(page.getByText("Acme Bakery asked for extra work")).toBeVisible();
-  await expect(page.getByText("🔒 Go-live").first()).toBeVisible();
+  await expect(page.locator(".bar-fill.is-locked", { hasText: "Go-live" })).toBeVisible();
   await page.getByRole("link", { name: "Price the request" }).first().click();
 
   // Wizard step 1 → 2.
   await expect(page).toHaveURL(/\/projects\/demo\/requests$/);
   await page.getByRole("button", { name: "New features + deadline" }).click();
   await page.getByRole("button", { name: "Analyze" }).click();
-  await expect(page.getByText("“add a gift-card page”")).toBeVisible();
+  await expect(page.getByText('"add a gift-card page"')).toBeVisible();
   await expect(page.getByText("$1,700.00").first()).toBeVisible();
 
   // Step 3: invoice sent, with a hand-off to the client view.
@@ -31,7 +31,7 @@ test("landing → change request → invoice → decline → pay → payout", as
   const invoice = state.invoices.find((i: { kind: string }) => i.kind === "change_order");
 
   await page.goto("/projects/demo");
-  await expect(page.getByText("🔒 Gift-card page").first()).toBeVisible();
+  await expect(page.locator(".bar-fill.is-locked", { hasText: "Gift-card page" })).toBeVisible();
   test.skip(state.config.paypalMode !== "simulated", "Real sandbox checkout needs a buyer login");
 
   // Client view: decline, recover, pay.
@@ -53,7 +53,7 @@ test("landing → change request → invoice → decline → pay → payout", as
   await page.getByRole("link", { name: "Back to agency view" }).last().click();
   await expect(page.getByText(/Paid! \d+ tasks? unlocked/)).toBeVisible();
   await expect(page.getByText("Gift-card page", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("🔒 Gift-card page")).toHaveCount(0);
+  await expect(page.locator(".bar-fill.is-locked", { hasText: "Gift-card page" })).toHaveCount(0);
 
   await page.getByRole("main").getByRole("link", { name: "Pay the team" }).first().click();
   await expect(page).toHaveURL(/\/projects\/demo\/team$/);
