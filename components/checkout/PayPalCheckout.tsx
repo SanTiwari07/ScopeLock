@@ -157,7 +157,7 @@ function SimulatedButton({ invoiceId, simulateDecline, onOutcome, onBusy }: Prop
   return (
     <div className="flex flex-col gap-2">
       <Button variant="primary" size="lg" className="w-full" loading={busy} onClick={pay}>
-        {busy ? "Processing…" : "Pay with PayPal (simulated)"}
+        {busy ? "Processing..." : "Pay with PayPal (simulated)"}
       </Button>
       <p className="t-body-sm text-center text-ink-muted">PayPal simulator: no sandbox keys are configured on this server.</p>
     </div>

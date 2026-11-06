@@ -72,7 +72,7 @@ export function prePayoutChecks(ctx: PrePayoutContext): Check[] {
       pass: overCap.length === 0,
       detail: overCap.length
         ? `${overCap.map((s) => s.name).join(", ")} over ${formatUSD(ctx.payoutCapCents)}`
-        : `Largest ${formatUSD(largest)} ≤ cap ${formatUSD(ctx.payoutCapCents)}`,
+        : `Largest ${formatUSD(largest)} is within the ${formatUSD(ctx.payoutCapCents)} cap`,
     },
   ];
 }

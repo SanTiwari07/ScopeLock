@@ -94,7 +94,7 @@ export function PayPage({ invoiceId, sdkUrl }: { invoiceId: string; sdkUrl: stri
           <>
             <h1 className="t-display-lg mb-2">{outcome?.kind === "success" ? "Thank you!" : "Pay invoice"}</h1>
             <p className="t-body-lg mb-8 text-ink-muted">
-              {AGENCY_NAME} sent you an invoice for {data.project.name.replace(/^.*?—\s*/, "your ")}.
+              {AGENCY_NAME} sent you an invoice for the {data.project.name}.
             </p>
 
             <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[3fr_2fr]">
@@ -231,7 +231,7 @@ export function PayPage({ invoiceId, sdkUrl }: { invoiceId: string; sdkUrl: stri
                         onOutcome={handleOutcome}
                         onBusy={setBusy}
                       />
-                      {busy && <p className="t-body-sm mt-2 text-center text-ink-muted">Confirming your payment…</p>}
+                      {busy && <p className="t-body-sm mt-2 text-center text-ink-muted">Confirming your payment...</p>}
                       {outcome?.kind === "cancelled" && <p className="t-body-sm mt-2 text-ink-muted">Payment cancelled. You can try again.</p>}
                       {outcome?.kind === "error" && (
                         <Alert tone="danger" title="Payment didn't go through" className="mt-3">

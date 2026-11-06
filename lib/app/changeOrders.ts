@@ -58,7 +58,7 @@ export async function createChangeOrder(input: { changeRequestId: string; items:
       projectId,
       kind: "change_order",
       refId: changeOrderId,
-      title: `Change order — ${lines.map((l) => l.title).join(", ")}`.slice(0, 120),
+      title: `Change order: ${lines.map((l) => l.title).join(", ")}`.slice(0, 120),
       status: "DRAFT",
       totalCents,
       currency: "USD",

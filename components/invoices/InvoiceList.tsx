@@ -79,7 +79,7 @@ function InvoiceCard({ inv, onChanged, onRemind }: { inv: InvoiceDTO; onChanged:
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
         {inv.paypalInvoiceId && <CopyId value={inv.paypalInvoiceId} max={22} />}
-        {inv.seeded && <Badge tone="info">Seeded history</Badge>}
+        {inv.seeded && <Badge tone="info">Sample history</Badge>}
         {declined > 0 && <Badge tone="danger">{declined} declined attempt{declined === 1 ? "" : "s"}</Badge>}
       </div>
 

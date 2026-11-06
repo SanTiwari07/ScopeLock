@@ -1,4 +1,4 @@
-# ScopeLock — Product Requirements Document
+# ScopeLock: Product Requirements Document
 
 **Hackathon:** Build What's Next with PayPal and AI (Devpost)
 **Submission deadline:** Nov 12, 2026, 12:00 PM PT (20:00 UTC). Internal code freeze: Nov 11, 8:00 PM PT.
@@ -32,7 +32,7 @@ Existing tools split this across a project tool (Jira, Asana), a time tracker, a
 | **Client** | The business buying the project | A clear itemised change order, and an easy way to pay |
 | **Contractor** | Designer or developer on the agency's team | Get paid their share as soon as the client pays, with a record of what for |
 
-The demo uses one seeded project: *"Acme Bakery — e-commerce site"*, with 3 milestones and 3 contractors.
+The demo uses one seeded project: *"Acme Bakery online store"*, with 3 milestones and 3 contractors.
 
 ## 4. Goals and non-goals
 
@@ -72,7 +72,7 @@ The demo uses one seeded project: *"Acme Bakery — e-commerce site"*, with 3 mi
 
 1. **Dashboard.** The agency lead opens the Acme Bakery project. The timeline shows Milestone 1 (Design) paid and done, Milestone 2 (Build) in progress, and Milestone 3 (Launch) locked.
 2. **Paste a change request.** The lead pastes a client message, e.g. *"Love it! Can we also add a gift-card page and make the menu filterable by allergens? Need it before the holiday launch."*
-3. **AI extraction.** The AI returns structured items: "Gift-card page — 10h — dev", "Allergen filter — 6h — dev", "QA for new features — 3h — qa". Each item comes with the quote it came from and a confidence score, plus a flag for whether it was in the original scope.
+3. **AI extraction.** The AI returns structured items: "Gift-card page, 10h, dev", "Allergen filter, 6h, dev", "QA for new features, 3h, qa". Each item comes with the quote it came from and a confidence score, plus a flag for whether it was in the original scope.
 4. **Review and edit.** The lead adjusts hours, removes an item, and sees the price recalculated by code from the project's rate card. The timeline previews how far the new work pushes the dates.
 5. **Create change-order invoice.** One click creates and sends a real PayPal sandbox invoice (`INV2-…`) to the client. The new tasks appear on the timeline, locked behind that invoice.
 6. **Client pays.** The client opens the pay page and pays with the PayPal button (JS SDK v6, sandbox buyer account).

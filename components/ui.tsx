@@ -12,7 +12,7 @@ import {
   LifeBuoy,
   LoaderCircle,
   Lock,
-  Sparkles,
+  ScanText,
   TriangleAlert,
   X,
 } from "lucide-react";
@@ -109,7 +109,7 @@ export function Badge({
   );
 }
 
-/** Domain value → badge (DESIGN §3.3). */
+/** Maps a domain status value to a badge (DESIGN §3.3). */
 export function statusBadge(value: string): { tone: Tone; label: string; spinning?: boolean } {
   switch (value) {
     case "planned":
@@ -161,7 +161,7 @@ export function ProvenanceBadge({ source }: { source: "ai" | "fallback" | "cache
   if (source === "ai")
     return (
       <span className="t-label inline-flex h-6 items-center gap-1 rounded-full bg-brand-accent px-2.5 text-brand">
-        <Sparkles size={14} aria-hidden /> AI
+        <ScanText size={14} aria-hidden /> Read by Gemini
       </span>
     );
   if (source === "cache")
@@ -172,7 +172,7 @@ export function ProvenanceBadge({ source }: { source: "ai" | "fallback" | "cache
     );
   return (
     <Badge tone="warning" icon={LifeBuoy}>
-      Fallback
+      Rule-based
     </Badge>
   );
 }
@@ -182,7 +182,7 @@ export function ProvenanceBadge({ source }: { source: "ai" | "fallback" | "cache
 export function middleTruncate(s: string, max = 18): string {
   if (s.length <= max) return s;
   const keep = Math.floor((max - 1) / 2);
-  return `${s.slice(0, keep)}…${s.slice(-keep)}`;
+  return `${s.slice(0, keep)}...${s.slice(-keep)}`;
 }
 
 export function CopyId({ value, max = 18, className }: { value: string; max?: number; className?: string }) {

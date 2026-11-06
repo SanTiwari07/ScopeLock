@@ -1,4 +1,4 @@
-# ScopeLock — Implementation Plan
+# ScopeLock: Implementation Plan
 
 **Companion doc:** [prd.md](prd.md), which covers what to build and why. This doc covers how, in what order, and what "done" means.
 **Timeline:** Oct 28 – Nov 11, 2026 build (15 days). Final submit Nov 12 before 12:00 PM PT.
@@ -160,7 +160,7 @@ invoice:   DRAFT → SENT → PAID     (mirrors PayPal statuses we care about)
 
 ## 6. Seed data (`lib/db/seed.ts`)
 
-- Project: "Acme Bakery — e-commerce site", client "Acme Bakery", client email = `DEMO_CLIENT_EMAIL`.
+- Project: "Acme Bakery online store", client "Acme Bakery", client email = `DEMO_CLIENT_EMAIL`.
 - Rate card: design $80/h, dev $95/h, qa $60/h, pm $70/h.
 - Contractors: Designer (30%), Frontend dev (35%), Backend dev (35%) of the contractor pool. The agency margin is 20% off the top.
 - Milestones: M1 Design $2,400 (`paid_out`, with a seeded fake history in the ledger), M2 Build $6,800 (`invoiced`, unpaid, **real sandbox invoice created on first boot**), M3 Launch $1,600 (`planned`).
@@ -390,12 +390,12 @@ Notes:
 | 8 | Tue Nov 4 | Change request panel (edit items, live price) and the change-order route wired up | Paste → invoice → new locked tasks |
 | 9 | Wed Nov 5 | Payouts panel and checklist, AG Grid ledger, activity drawer | Full flow works locally |
 | 10 | Thu Nov 6 | Deploy to Render, fix production issues, health route, judge guide, reset button | Full flow works on the hosted URL |
-| 11 | Fri Nov 7 | P1: AI reminder, NL ledger filter. Accessibility pass | — |
+| 11 | Fri Nov 7 | P1: AI reminder, NL ledger filter. Accessibility pass | - |
 | 12 | Sat Nov 8 | Playwright happy path, README (architecture diagram, setup, test accounts), screenshots | A fresh clone runs from the README |
 | 13 | Sun Nov 9 | Polish UI copy and empty states, rehearse the demo, write the video script | Under-3-min dry run |
 | 14 | Mon Nov 10 | Record and edit the video, upload to YouTube (public). Draft the Devpost text | Video live |
 | 15 | Tue Nov 11 | Freeze code by 8 PM PT. Final hosted run. Submit the Devpost form (it can be edited until the deadline) | Submitted |
-| — | Wed Nov 12 | Buffer only. Deadline 12:00 PM PT | — |
+| - | Wed Nov 12 | Buffer only. Deadline 12:00 PM PT | - |
 
 Days 11–13 are slack: if anything P0 slips, it eats these days first.
 
@@ -420,7 +420,7 @@ Days 11–13 are slack: if anything P0 slips, it eats these days first.
 | 1:10–1:45 | Pay page: declined card (mock), then retry succeeds | "We test the unhappy path: a declined card, recovered without losing the order." |
 | 1:45–2:15 | Tasks unlock, payout checks go green, batch SUCCESS | "Payment unlocks the work. Six deterministic checks, then PayPal Payouts splits the money across the team." |
 | 2:15–2:35 | Ledger, architecture slide (PayPal APIs, AI, open-source stack) | "Invoicing, Orders, JS SDK v6 and Payouts, on a $0 open-source stack." |
-| 2:35–2:40 | URL and repo | — |
+| 2:35–2:40 | URL and repo | - |
 
 Record at 1080p with OBS Studio, edit in Shotcut (both free and open source). Use no copyrighted music.
 

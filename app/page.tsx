@@ -12,7 +12,6 @@ import {
   Lock,
   MessageSquareText,
   ShieldCheck,
-  Sparkles,
   Unlock,
   UserCheck,
   Users,
@@ -25,7 +24,7 @@ const STEPS = [
   {
     Icon: MessageSquareText,
     title: "Paste the client's message",
-    body: "“Love it! Can we also add a gift-card page?” AI turns the casual ask into clear work items, each tied to the exact words it came from.",
+    body: `"Love it! Can we also add a gift-card page?" Gemini turns the message into a list of work items and shows the words each one came from.`,
     api: "Gemini 2.5 Flash",
   },
   {
@@ -49,17 +48,17 @@ const STEPS = [
 ];
 
 const PAINS = [
-  { Icon: MessageSquareText, title: "Requests hide in chat", body: "Extra work arrives as a friendly “one more thing” in email or Slack, never as a purchase order." },
+  { Icon: MessageSquareText, title: "Requests hide in chat", body: `Extra work arrives as a friendly "one more thing" in email or Slack, never as a purchase order.` },
   { Icon: Clock, title: "Pricing takes too long", body: "Scoping and quoting each small ask is a chore, so agencies quietly do it for free." },
   { Icon: Lock, title: "Work starts before money", body: "The team builds first and invoices later, and then waits weeks to get paid." },
   { Icon: Banknote, title: "Splitting pay is manual", body: "Every payment means a spreadsheet and a round of transfers to each freelancer." },
 ];
 
 const GUARDS = [
-  { Icon: Bot, title: "AI reads", body: "It extracts work items and quotes the client's words. Items it can't quote are dropped." },
-  { Icon: Calculator, title: "Code prices", body: "Every dollar comes from your rate card in integer cents. The model never sets an amount." },
-  { Icon: UserCheck, title: "You approve", body: "Nothing goes to the client, and no money moves, until a human clicks the button." },
-  { Icon: ShieldCheck, title: "PayPal guards", body: "Idempotency keys on every call. Duplicate payments and duplicate payouts are blocked." },
+  { Icon: Bot, title: "Gemini reads the message", body: "It lists the work items and quotes the client's words. Any item it can't quote is dropped." },
+  { Icon: Calculator, title: "Code sets every price", body: "Every dollar comes from your rate card in integer cents. The model never sets an amount." },
+  { Icon: UserCheck, title: "You approve each step", body: "Nothing goes to the client, and no money moves, until a human clicks the button." },
+  { Icon: ShieldCheck, title: "Duplicates are blocked", body: "Idempotency keys on every call. Duplicate payments and duplicate payouts are blocked." },
 ];
 
 export default function Landing() {
@@ -78,7 +77,7 @@ export default function Landing() {
               Why it matters
             </a>
             <a href="#trust" className="hover:text-white">
-              Safe by design
+              Where AI is used
             </a>
           </nav>
           <Link href={DEMO_PROJECT_PATH} className="btn btn-sm bg-white text-navy hover:bg-brand-accent-soft">
@@ -89,10 +88,10 @@ export default function Landing() {
         <section className="relative mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-12 px-4 pt-10 pb-24 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:pt-16">
           <div>
             <span className="t-label inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-brand-accent ring-1 ring-white/15">
-              <Sparkles size={14} aria-hidden /> AI × PayPal, for agencies and freelancers
+              For agencies and freelancers
             </span>
             <h1 className="mt-6 font-display text-5xl leading-[1.02] font-black tracking-[-0.04em] sm:text-6xl lg:text-7xl">
-              Get paid for every <span className="text-brand-accent">“can you also add…”</span>
+              Get paid for every <span className="text-brand-accent">&quot;can you also add...&quot;</span>
             </h1>
             <p className="t-body-lg mt-6 max-w-xl text-white/85 sm:text-xl">
               ScopeLock turns a client&apos;s change request into a priced PayPal invoice in seconds, locks the extra work until it&apos;s paid, then
@@ -127,9 +126,9 @@ export default function Landing() {
       <section id="why" className="mx-auto max-w-[1200px] scroll-mt-8 px-4 py-24 sm:px-8">
         <div className="max-w-2xl">
           <div className="eyebrow text-brand">The problem</div>
-          <h2 className="t-display-lg mt-2">Scope creep is unpaid work in disguise</h2>
+          <h2 className="t-display-lg mt-2">Scope creep is work you never get paid for</h2>
           <p className="t-body-lg mt-4 text-ink-muted">
-            Small agencies and freelancers live on fixed-price projects. Every “quick extra” eats into the margin, and nobody has time to turn a
+            Small agencies and freelancers live on fixed-price projects. Every &quot;quick extra&quot; eats into the margin, and nobody has time to turn a
             chat message into a quote, an invoice and four payouts.
           </p>
         </div>
@@ -212,11 +211,11 @@ export default function Landing() {
       <section id="trust" className="scroll-mt-8 bg-navy py-24 text-white">
         <div className="mx-auto max-w-[1200px] px-4 sm:px-8">
           <div className="max-w-2xl">
-            <div className="eyebrow text-brand-accent">Safe by design</div>
-            <h2 className="t-display-lg mt-2">AI reads. Code prices. You approve.</h2>
+            <div className="eyebrow text-brand-accent">Where AI is used</div>
+            <h2 className="t-display-lg mt-2">The AI never touches the money</h2>
             <p className="t-body-lg mt-4 text-white/75">
-              Money is too important to leave to a language model. ScopeLock uses AI only where it shines, understanding messy human requests, and
-              keeps everything else deterministic.
+              Gemini only reads the client&apos;s message. Prices, invoices, payments and payouts are handled by plain code, and each one waits
+              for your click.
             </p>
           </div>
           <ul className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -250,7 +249,7 @@ export default function Landing() {
       <footer className="border-t border-hairline">
         <div className="t-body-sm mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-4 py-8 text-ink-muted sm:px-8">
           <Wordmark />
-          <span>Built for “Build What&apos;s Next with PayPal and AI”. Sandbox only, all data is fake. MIT licensed.</span>
+          <span>Built for the Build What&apos;s Next with PayPal and AI hackathon. Sandbox only, all data is fake. MIT licensed.</span>
         </div>
       </footer>
     </div>
@@ -275,11 +274,11 @@ function HeroMock() {
         </p>
       </div>
 
-      {/* AI → invoice */}
+      {/* Priced invoice */}
       <div className="float-b relative z-20 -mt-4 w-[92%] rounded-lg bg-white p-5 text-ink shadow-overlay">
         <div className="mb-3 flex items-center justify-between">
           <span className="t-label inline-flex items-center gap-1 rounded-full bg-brand-accent px-2.5 py-1 text-brand">
-            <Sparkles size={12} /> AI found 3 items
+            3 work items found
           </span>
           <span className="t-label inline-flex items-center gap-1 rounded-full bg-warning-soft px-2.5 py-1 text-warning">
             <Clock size={12} /> Awaiting payment

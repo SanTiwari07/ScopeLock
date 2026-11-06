@@ -2,7 +2,7 @@ import type { InvoiceDTO, PayoutBatchDTO, ProjectState } from "@/lib/api-types";
 import { formatUSD } from "@/lib/domain/money";
 
 export const JOURNEY_STEPS = [
-  { title: "Price the request", hint: "AI reads the client's message" },
+  { title: "Price the request", hint: "From the client's message" },
   { title: "Client pays", hint: "PayPal checkout" },
   { title: "Work unlocks", hint: "Locked tasks open up" },
   { title: "Pay the team", hint: "PayPal Payouts" },
@@ -42,7 +42,7 @@ export function journey(state: ProjectState): Journey {
   if (step === 0) {
     next = {
       title: `${state.project.clientName} asked for extra work`,
-      body: "Paste their message. The AI lists the new work, the app prices it from your rate card, and one click sends a PayPal invoice.",
+      body: "Paste their message. ScopeLock lists the new work, prices it from your rate card, and sends a PayPal invoice when you approve.",
       cta: "Price the request",
       href: `${base}/requests`,
     };

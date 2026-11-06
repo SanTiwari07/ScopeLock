@@ -10,7 +10,7 @@ import {
   type IRowNode,
 } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { CreditCard, Download, FileText, Search, Send, Sparkles, X } from "lucide-react";
+import { CreditCard, Download, FileText, MessageCircleQuestion, Search, Send, X } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import type { LedgerFilter } from "@/lib/ai/nlFilter";
 import type { LedgerRow } from "@/lib/api-types";
@@ -71,9 +71,9 @@ function describeFilter(f: LedgerFilter): string[] {
   const chips: string[] = [];
   if (f.status) chips.push(`status: ${f.status}`);
   if (f.kind) chips.push(`type: ${f.kind}`);
-  if (f.minAmount !== undefined) chips.push(`≥ ${formatUSD(Math.round(f.minAmount * 100))}`);
-  if (f.maxAmount !== undefined) chips.push(`≤ ${formatUSD(Math.round(f.maxAmount * 100))}`);
-  if (f.text) chips.push(`“${f.text}”`);
+  if (f.minAmount !== undefined) chips.push(`at least ${formatUSD(Math.round(f.minAmount * 100))}`);
+  if (f.maxAmount !== undefined) chips.push(`up to ${formatUSD(Math.round(f.maxAmount * 100))}`);
+  if (f.text) chips.push(`"${f.text}"`);
   return chips;
 }
 
@@ -116,7 +116,7 @@ export default function LedgerGrid({ rows }: { rows: LedgerRow[] }) {
         // The totals text must be the cell's value: AG Grid only re-renders a cell when its value changes.
         valueGetter: (p) => (p.data?.isTotal ? p.data.totalsText : p.data?.reference),
         cellRenderer: (p: ICellRendererParams<Row>) =>
-          p.data?.isTotal ? <span className="t-body-sm font-bold">{p.value}</span> : p.value ? <CopyId value={p.value} max={20} /> : <span className="text-ink-subtle">—</span>,
+          p.data?.isTotal ? <span className="t-body-sm font-bold">{p.value}</span> : p.value ? <CopyId value={p.value} max={20} /> : <span className="text-ink-subtle">-</span>,
         colSpan: (p) => (p.data?.isTotal ? 3 : 1),
       },
       { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
@@ -139,7 +139,7 @@ export default function LedgerGrid({ rows }: { rows: LedgerRow[] }) {
           p.data && !p.data.isTotal ? (
             <span className="inline-flex items-center gap-1">
               <StatusBadge value={p.value} />
-              {p.data.seeded && <span className="t-label text-ink-muted">seeded</span>}
+              {p.data.seeded && <span className="t-label text-ink-muted">sample</span>}
             </span>
           ) : null,
       },
@@ -196,7 +196,7 @@ export default function LedgerGrid({ rows }: { rows: LedgerRow[] }) {
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative min-w-[240px] flex-1 sm:max-w-md">
           {nlMode ? (
-            <Sparkles size={16} className="absolute top-1/2 left-3 -translate-y-1/2 text-brand" aria-hidden />
+            <MessageCircleQuestion size={16} className="absolute top-1/2 left-3 -translate-y-1/2 text-brand" aria-hidden />
           ) : (
             <Search size={16} className="absolute top-1/2 left-3 -translate-y-1/2 text-ink-muted" aria-hidden />
           )}
@@ -214,7 +214,7 @@ export default function LedgerGrid({ rows }: { rows: LedgerRow[] }) {
         <Button
           size="sm"
           variant={nlMode ? "primary" : "secondary"}
-          icon={<Sparkles size={16} aria-hidden />}
+          icon={<MessageCircleQuestion size={16} aria-hidden />}
           aria-pressed={nlMode}
           loading={nlLoading}
           onClick={() => (nlMode && quick.trim() ? runNl() : setNlMode((m) => !m))}

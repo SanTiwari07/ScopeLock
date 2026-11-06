@@ -6,10 +6,10 @@ import type { ProjectState } from "@/lib/api-types";
 import { CopyId, Modal } from "./ui";
 
 const STEPS = [
-  { title: "Price the client's request", body: "Change requests → pick a sample message → Analyze. Review the items, then Create invoice & send.", path: "/requests" },
-  { title: "Pay as the client", body: "Open the client view. Turn on “Simulate declined card” to see the recovery, then pay with PayPal.", path: "/invoices" },
+  { title: "Price the client's request", body: "Open Change requests, pick a sample message and click Analyze. Check the items, then click Create invoice & send.", path: "/requests" },
+  { title: "Pay as the client", body: 'Open the client view. Turn on "Simulate declined card" to see a failed payment and the retry, then pay with PayPal.', path: "/invoices" },
   { title: "Watch the work unlock", body: "Back on the Overview, the locked tasks open up on the timeline and the money log shows the payment.", path: "" },
-  { title: "Pay the team", body: "Pay the team → six checks go green → Pay contractors. PayPal Payouts splits the money.", path: "/team" },
+  { title: "Pay the team", body: "Open Pay the team. When all six checks pass, click Pay contractors and PayPal Payouts splits the money.", path: "/team" },
 ];
 
 export function JudgeGuide({
@@ -31,7 +31,7 @@ export function JudgeGuide({
           The whole story in <span className="text-brand-accent">3 minutes</span>
         </h2>
         <p className="t-body-lg mt-3 text-white/85">
-          You run a small agency. Your client keeps asking for “just one more thing”. ScopeLock makes sure every extra gets priced, paid and
+          You run a small agency. Your client keeps asking for &quot;just one more thing&quot;. ScopeLock makes sure every extra gets priced, paid and
           shared with your team.
         </p>
       </div>

@@ -69,7 +69,7 @@ export function useProject(projectId: string) {
 }
 
 export function formatDate(iso: string | null | undefined, opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" }) {
-  if (!iso) return "—";
+  if (!iso) return "-";
   const d = iso.length === 10 ? new Date(`${iso}T00:00:00Z`) : new Date(iso);
   return d.toLocaleDateString("en-US", { timeZone: iso.length === 10 ? "UTC" : undefined, ...opts });
 }

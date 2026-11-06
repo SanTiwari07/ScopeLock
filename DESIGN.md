@@ -125,14 +125,14 @@ This file replaces the scraped marketing reference (`DESIGN (1).md`). That refer
 | `ink` | #000000 | Headlines, body, labels, primary button fill | Softened to grey for paragraphs |
 | `ink-muted` | #686A6D | Helper text, timestamps, secondary table columns | Long paragraphs |
 | `ink-subtle` | #8A8D91 | Placeholders, disabled labels | Anything the user must read |
-| `canvas` | #FFFFFF | Panels, cards, header, table body | — |
+| `canvas` | #FFFFFF | Panels, cards, header, table body | - |
 | `surface-warm` | #F1EFEA | App background behind panels; pay-page background | Panel fill (panels sit on it) |
-| `surface-sunken` | #ECE9E3 | Locked task rows, read-only fields, code blocks | — |
-| `surface-tint` | 8% navy | Segmented tab track, secondary buttons, hovered table row | — |
+| `surface-sunken` | #ECE9E3 | Locked task rows, read-only fields, code blocks | - |
+| `surface-tint` | 8% navy | Segmented tab track, secondary buttons, hovered table row | - |
 | `hairline` | #CFD3D8 | Panel borders, dividers, table row lines | Form-control outlines |
 | `border-control` | #8A8D91 | Input, textarea, select and checkbox outlines | Decorative dividers |
 | `link` / `link-strong` | #0066F5 / #0057D1 | Links. Use `link-strong` on parchment or tinted fills | Button fills |
-| `focus-ring` | #097FF5 | Focus outline | — |
+| `focus-ring` | #097FF5 | Focus outline | - |
 
 ### 3.2 Status
 

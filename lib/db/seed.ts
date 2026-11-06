@@ -50,7 +50,7 @@ export function seed(db: Db, now = new Date()): { m2InvoiceId: string } {
   db.insert(schema.projects)
     .values({
       id: P,
-      name: "Acme Bakery — e-commerce site",
+      name: "Acme Bakery online store",
       clientName: "Acme Bakery",
       clientEmail: env.DEMO_CLIENT_EMAIL,
       currency: "USD",
@@ -110,16 +110,16 @@ export function seed(db: Db, now = new Date()): { m2InvoiceId: string } {
       projectId: P,
       kind: "milestone",
       refId: "m1",
-      title: "Milestone 1 — Design",
+      title: "Milestone 1: Design",
       paypalInvoiceId: null,
       invoiceNumber: "DEMO-0001",
       status: "PAID",
       totalCents: 240000,
       currency: "USD",
       itemsJson: JSON.stringify([
-        { title: "Milestone 1 — Design", description: "Discovery, wireframes, visual design", role: "design", hours: 1, rateCents: 240000, amountCents: 240000 },
+        { title: "Milestone 1: Design", description: "Discovery, wireframes, visual design", role: "design", hours: 1, rateCents: 240000, amountCents: 240000 },
       ]),
-      note: "Seeded history",
+      note: "Sample history",
       dueDate: addDays(start, 14),
       seeded: true,
       createdAt: new Date(`${addDays(start, 11)}T10:00:00Z`).toISOString(),
@@ -166,12 +166,12 @@ export function seed(db: Db, now = new Date()): { m2InvoiceId: string } {
       projectId: P,
       kind: "milestone",
       refId: "m2",
-      title: "Milestone 2 — Build",
+      title: "Milestone 2: Build",
       status: "DRAFT",
       totalCents: 680000,
       currency: "USD",
       itemsJson: JSON.stringify([
-        { title: "Milestone 2 — Build", description: "Storefront, catalog API, cart & checkout, order emails", role: "dev", hours: 1, rateCents: 680000, amountCents: 680000 },
+        { title: "Milestone 2: Build", description: "Storefront, catalog API, cart & checkout, order emails", role: "dev", hours: 1, rateCents: 680000, amountCents: 680000 },
       ]),
       note: "Milestone 2 of 3. Thank you for your business!",
       dueDate: addDays(thisMonday(now), 7),
@@ -182,9 +182,9 @@ export function seed(db: Db, now = new Date()): { m2InvoiceId: string } {
 
   db.insert(schema.events)
     .values([
-      { projectId: P, type: "seed", level: "info", message: "Milestone 1 (Design) invoice paid — seeded history", paypalRef: "DEMO-CAPTURE-0001", createdAt: m1Paid },
-      { projectId: P, type: "seed", level: "success", message: "Milestone 1 paid out to 3 contractors — seeded history", paypalRef: "DEMO-BATCH-0001", createdAt: new Date(`${addDays(start, 12)}T16:00:00Z`).toISOString() },
-      { projectId: P, type: "seed", level: "info", message: "Demo workspace seeded", paypalRef: null, createdAt: ts },
+      { projectId: P, type: "seed", level: "info", message: "Milestone 1 (Design) invoice paid (sample history)", paypalRef: "DEMO-CAPTURE-0001", createdAt: m1Paid },
+      { projectId: P, type: "seed", level: "success", message: "Milestone 1 paid out to 3 contractors (sample history)", paypalRef: "DEMO-BATCH-0001", createdAt: new Date(`${addDays(start, 12)}T16:00:00Z`).toISOString() },
+      { projectId: P, type: "seed", level: "info", message: "Demo project loaded", paypalRef: null, createdAt: ts },
     ])
     .run();
 

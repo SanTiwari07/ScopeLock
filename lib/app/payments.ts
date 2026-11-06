@@ -27,7 +27,7 @@ export async function createOrderForInvoice(invoiceId: string): Promise<{ orderI
   const db = getDb();
   const inv = loadInvoice(invoiceId);
   if (inv.status === "PAID") throw alreadyPaid(inv);
-  if (inv.seeded) throw new AppError(409, "SEEDED", "Seeded history can't be paid");
+  if (inv.seeded) throw new AppError(409, "SEEDED", "Sample history can't be paid");
   if (!inv.paypalInvoiceId || !inv.invoiceNumber) {
     throw new AppError(409, "NOT_SENT", "This invoice hasn't been sent through PayPal yet");
   }

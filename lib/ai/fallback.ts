@@ -23,7 +23,7 @@ function toTitle(clause: string): string {
   let t = clause.replace(/[?.!]+$/, "").trim();
   for (let i = 0; i < 4; i++) t = t.replace(LEAD_IN, "").trim();
   t = t.charAt(0).toUpperCase() + t.slice(1);
-  if (t.length > 80) t = `${t.slice(0, 77).trimEnd()}…`;
+  if (t.length > 80) t = `${t.slice(0, 77).trimEnd()}...`;
   return t.length >= 3 ? t : "Requested change";
 }
 

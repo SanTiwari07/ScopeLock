@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"], 
 const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["500"], variable: "--font-jetbrains-mono" });
 
 export const metadata: Metadata = {
-  title: { default: "ScopeLock — get paid for every scope change", template: "%s · ScopeLock" },
+  title: { default: "ScopeLock | Get paid for every scope change", template: "%s · ScopeLock" },
   description:
     "Turn a client's change request into a priced PayPal invoice, lock work until it's paid, then pay the team.",
 };
