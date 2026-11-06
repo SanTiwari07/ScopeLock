@@ -16,6 +16,20 @@ Built for *Build What's Next with PayPal and AI*. Sandbox only, no real money.
 6. **Pay the team.** Six deterministic pre-payout checks, then a Payouts v1 batch splits the money across three contractors, with the agency margin retained.
 7. **Ledger.** An AG Grid ledger of every invoice, payment and payout, with quick search, an "Ask" natural-language filter, totals and CSV export.
 
+## The app
+
+| Page | What it's for |
+|---|---|
+| `/` | Landing page: the problem, how it works, the AI guard rails, and a link into the demo |
+| `/projects/demo` | **Overview**: a "next step" guide with the 4-step journey, money KPIs, milestones, the Gantt timeline, team and activity |
+| `/projects/demo/requests` | **Change requests**: a 3-step wizard (client message → review & price → invoice sent) |
+| `/projects/demo/invoices` | **Invoices**: every invoice, with "Pay as the client" and reminders |
+| `/projects/demo/team` | **Pay the team**: the split bar, six pre-payout checks and the Payouts batch |
+| `/projects/demo/ledger` | **Money log**: the AG Grid ledger with natural-language filtering |
+| `/pay/[invoiceId]` | **Client view**: the pay page the client sees, with a banner to switch back to the agency view |
+
+A sidebar on every agency page tracks the demo journey and always links to the next action, so a first-time visitor never has to guess what to do.
+
 ## Architecture
 
 ```
