@@ -33,5 +33,3 @@ services:
         value: ./data/scopelock.db
       - key: PAYOUT_CAP_CENTS
         value: "500000"
-      - key: APP_BASE_URL
-        sync: false

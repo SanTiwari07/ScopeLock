@@ -38,7 +38,10 @@ const EnvSchema = z.object({
 export type Env = z.infer<typeof EnvSchema> & { paypalMode: "sandbox" | "simulated" };
 
 function load(): Env {
-  const parsed = EnvSchema.safeParse(process.env);
+  // Hosting dashboards often store unset optional variables as "". Treat those as missing so
+  // defaults apply instead of failing validation.
+  const raw = Object.fromEntries(Object.entries(process.env).filter(([, v]) => v !== undefined && v.trim() !== ""));
+  const parsed = EnvSchema.safeParse(raw);
   if (!parsed.success) {
     const lines = parsed.error.issues.map((i) => `  - ${i.path.join(".")}: ${i.message}`);
     throw new Error(`Invalid environment configuration:\n${lines.join("\n")}\nSee .env.example.`);
