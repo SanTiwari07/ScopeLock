@@ -22,7 +22,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 const theme = themeQuartz.withParams({
   fontFamily: "var(--font-inter), Helvetica, Arial, sans-serif",
-  fontSize: 14,
+  fontSize: 13,
+  cellHorizontalPaddingScale: 0.65,
   headerFontWeight: 700,
   headerBackgroundColor: "#F1EFEA",
   foregroundColor: "#000000",
@@ -42,6 +43,10 @@ const KIND = {
 } as const;
 
 type Row = LedgerRow & { isTotal?: boolean; totalsText?: string };
+
+// Stable references: AG Grid re-applies options whose identity changes on each render.
+const DEFAULT_COL_DEF: ColDef<Row> = { sortable: true, filter: true, resizable: true };
+const getRowId = (p: { data: Row }) => p.data.id;
 
 /** Map the validated NL filter onto rows in code. Model output never reaches the grid as-is. */
 function matchesFilter(r: LedgerRow, f: LedgerFilter | null): boolean {
@@ -90,15 +95,17 @@ export default function LedgerGrid({ rows }: { rows: LedgerRow[] }) {
       {
         field: "date",
         headerName: "Date",
-        width: 150,
+        flex: 1.1,
+        minWidth: 125,
         sort: "desc",
-        valueFormatter: (p) => (p.data?.isTotal ? "Totals" : p.value ? formatDateTime(p.value) : ""),
+        valueFormatter: (p) => (p.data?.isTotal ? "Net received" : p.value ? formatDateTime(p.value) : ""),
         cellClass: "tabular",
       },
       {
         field: "kind",
         headerName: "Type",
-        width: 130,
+        flex: 0.9,
+        minWidth: 100,
         cellRenderer: (p: ICellRendererParams<Row>) => {
           if (!p.data || p.data.isTotal) return null;
           const k = KIND[p.data.kind];
@@ -112,19 +119,21 @@ export default function LedgerGrid({ rows }: { rows: LedgerRow[] }) {
       {
         field: "reference",
         headerName: "Reference",
-        width: 230,
+        flex: 1.5,
+        minWidth: 160,
         // The totals text must be the cell's value: AG Grid only re-renders a cell when its value changes.
         valueGetter: (p) => (p.data?.isTotal ? p.data.totalsText : p.data?.reference),
         cellRenderer: (p: ICellRendererParams<Row>) =>
-          p.data?.isTotal ? <span className="t-body-sm font-bold">{p.value}</span> : p.value ? <CopyId value={p.value} max={20} /> : <span className="text-ink-subtle">-</span>,
+          p.data?.isTotal ? <span className="t-body-sm font-bold">{p.value}</span> : p.value ? <CopyId value={p.value} max={13} /> : <span className="text-ink-subtle">-</span>,
         colSpan: (p) => (p.data?.isTotal ? 3 : 1),
       },
-      { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
-      { field: "counterparty", headerName: "Counterparty", width: 150 },
+      { field: "description", headerName: "Description", flex: 2, minWidth: 125, tooltipField: "description" },
+      { field: "counterparty", headerName: "Counterparty", flex: 1.1, minWidth: 115 },
       {
         field: "amountCents",
         headerName: "Amount",
-        width: 140,
+        flex: 1,
+        minWidth: 105,
         type: "rightAligned",
         cellClass: "tabular font-bold",
         valueFormatter: (p) => (typeof p.value === "number" ? formatUSD(p.value) : ""),
@@ -134,12 +143,12 @@ export default function LedgerGrid({ rows }: { rows: LedgerRow[] }) {
       {
         field: "status",
         headerName: "Status",
-        width: 170,
+        flex: 1.2,
+        minWidth: 165,
         cellRenderer: (p: ICellRendererParams<Row>) =>
           p.data && !p.data.isTotal ? (
             <span className="inline-flex items-center gap-1">
               <StatusBadge value={p.value} />
-              {p.data.seeded && <span className="t-label text-ink-muted">sample</span>}
             </span>
           ) : null,
       },
@@ -147,6 +156,9 @@ export default function LedgerGrid({ rows }: { rows: LedgerRow[] }) {
     [],
   );
 
+  // Totals only change when the sums do. Setting state on every model update would re-render
+  // the grid, fire another model update and loop forever, which also blocks page navigation.
+  const lastTotals = useRef("");
   const recomputeTotals = useCallback(() => {
     const api = gridApi.current;
     if (!api) return;
@@ -160,11 +172,14 @@ export default function LedgerGrid({ rows }: { rows: LedgerRow[] }) {
       if (r.kind === "payment" && r.status === "paid") received += r.amountCents;
       if (r.kind === "payout" && r.status !== "failed") paidOut += -r.amountCents;
     });
+    const key = `${invoiced}|${received}|${paidOut}`;
+    if (key === lastTotals.current) return;
+    lastTotals.current = key;
     setTotals([
       {
         id: "totals",
         isTotal: true,
-        totalsText: `Invoiced ${formatUSD(invoiced)} · received ${formatUSD(received)} · paid out ${formatUSD(paidOut)}`,
+        totalsText: `Invoiced ${formatUSD(invoiced)} · In ${formatUSD(received)} · Out ${formatUSD(paidOut)}`,
         date: "",
         kind: "invoice",
         reference: null,
@@ -245,10 +260,10 @@ export default function LedgerGrid({ rows }: { rows: LedgerRow[] }) {
           theme={theme}
           rowData={filteredRows}
           columnDefs={columnDefs}
-          getRowId={(p) => p.data.id}
+          getRowId={getRowId}
           quickFilterText={nlMode ? undefined : quick}
           pinnedBottomRowData={totals}
-          defaultColDef={{ sortable: true, filter: true, resizable: true }}
+          defaultColDef={DEFAULT_COL_DEF}
           animateRows
           onGridReady={(e) => {
             gridApi.current = e.api;
