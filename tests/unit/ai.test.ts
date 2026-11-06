@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fallbackExtract } from "@/lib/ai/fallback";
-import { parseExtraction, stripFences } from "@/lib/ai/parse";
+import { parseExtraction, plainText, stripFences } from "@/lib/ai/parse";
 import { SAMPLE_MESSAGES } from "@/lib/ai/samples";
 import { Extraction } from "@/lib/ai/schema";
 
@@ -75,5 +75,13 @@ describe("fallback extractor", () => {
     const r = fallbackExtract("hmm");
     expect(r.extraction.items).toHaveLength(1);
     expect(Extraction.safeParse(r.extraction).success).toBe(true);
+  });
+});
+
+describe("plainText", () => {
+  it("removes em and en dashes, curly quotes and ellipsis characters", () => {
+    expect(plainText("Gift cards — new page")).toBe("Gift cards, new page");
+    expect(plainText("Pages 1–3")).toBe("Pages 1-3");
+    expect(plainText("“Quick” and it’s done…")).toBe('"Quick" and it\'s done...');
   });
 });

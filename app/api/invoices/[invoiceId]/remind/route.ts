@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { generateJson } from "@/lib/ai/extract";
+import { plainText } from "@/lib/ai/parse";
 import { REMINDER_SYSTEM } from "@/lib/ai/prompts";
 import { AppError, parseBody, rateLimit } from "@/lib/app/http";
 import { route } from "@/lib/app/route";
@@ -32,7 +33,7 @@ export const POST = route<{ invoiceId: string }>(async (req, { invoiceId }) => {
     const daysOverdue = inv.dueDate ? Math.max(0, Math.floor((Date.now() - Date.parse(inv.dueDate)) / 86_400_000)) : 0;
     const prompt = `Invoice ${inv.invoiceNumber}, "${inv.title}", ${formatUSD(inv.totalCents)}, due ${inv.dueDate}, ${daysOverdue} days overdue. Tone: ${body.tone}. Client: Acme Bakery.`;
     const parsed = Draft.safeParse(await generateJson(REMINDER_SYSTEM, prompt));
-    if (parsed.success) return { ...parsed.data, source: "ai" as const };
+    if (parsed.success) return { subject: plainText(parsed.data.subject), note: plainText(parsed.data.note), source: "ai" as const };
     return {
       subject: `Friendly reminder: invoice ${inv.invoiceNumber}`,
       note: `Hi Acme Bakery team, a quick reminder that invoice ${inv.invoiceNumber} for ${formatUSD(inv.totalCents)} (${inv.title}) is due ${inv.dueDate}. The next phase of work starts as soon as it's paid. Thank you!`,
