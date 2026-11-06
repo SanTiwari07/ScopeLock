@@ -2,6 +2,7 @@
 
 import "@svar-ui/react-gantt/all.css";
 import { Gantt, Tooltip, Willow, type IApi, type ITask } from "@svar-ui/react-gantt";
+import { Lock } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type FC } from "react";
 import type { MilestoneDTO, TaskDTO } from "@/lib/api-types";
 import { formatUSD } from "@/lib/domain/money";
@@ -27,7 +28,7 @@ const TooltipContent: FC<{ api: IApi; data: unknown }> = ({ data }) => {
       </div>
       {t.locked && (
         <div className="mt-1 font-bold text-locked">
-          🔒 Locked until {t.lockInvoiceNumber ? `invoice ${t.lockInvoiceNumber}` : "the invoice"} is paid
+          Locked until {t.lockInvoiceNumber ? `invoice ${t.lockInvoiceNumber}` : "the invoice"} is paid
           {t.lockAmountCents ? ` (${formatUSD(t.lockAmountCents)})` : ""}
         </div>
       )}
@@ -42,15 +43,32 @@ const TooltipContent: FC<{ api: IApi; data: unknown }> = ({ data }) => {
  */
 const BarTemplate: FC<{ data: ITask }> = ({ data }) => {
   if (data.type === "summary") return <div className="bar-fill bar-summary">{data.text}</div>;
-  return <div className={`bar-fill ${data.barClass ?? ""}`}>{data.text}</div>;
+  const locked = String(data.barClass ?? "").includes("is-locked");
+  return (
+    <div className={`bar-fill ${data.barClass ?? ""}`}>
+      {locked && <Lock size={12} strokeWidth={2.5} className="mr-1 shrink-0" aria-hidden />}
+      <span className="truncate">{data.text}</span>
+    </div>
+  );
 };
 
 export default function ProjectGantt({ tasks, milestones }: { tasks: TaskDTO[]; milestones: MilestoneDTO[] }) {
   const [api, setApi] = useState<IApi | undefined>();
   const prevLocked = useRef<Set<string> | null>(null);
   const [justUnlocked, setJustUnlocked] = useState<Set<string>>(new Set());
+  // Below ~700px SVAR collapses to a grid-only view, which hides the bars. Show the chart
+  // instead (bars carry the task names) when the panel is narrow.
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    const el = hostRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => setNarrow(entry.contentRect.width < 700));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
-  // Detect locked → unlocked transitions for the one expressive animation in the app.
+  // Detect tasks going from locked to unlocked for the one expressive animation in the app.
   useEffect(() => {
     const locked = new Set(tasks.filter((t) => t.locked).map((t) => t.id));
     const prev = prevLocked.current;
@@ -80,7 +98,8 @@ export default function ProjectGantt({ tasks, milestones }: { tasks: TaskDTO[]; 
           .join(" ");
         ganttTasks.push({
           id: t.id,
-          text: t.locked ? `🔒 ${t.title}` : t.title,
+          text: t.title,
+          status: t.locked ? "Locked" : "Open",
           start: toDate(t.startDate),
           duration: t.durationDays,
           parent: m.id,
@@ -105,12 +124,12 @@ export default function ProjectGantt({ tasks, milestones }: { tasks: TaskDTO[]; 
   const lockedCount = tasks.filter((t) => t.locked).length;
   // Re-mount when the data changes so SVAR picks up new tasks, dates and classes.
   const key = useMemo(
-    () => ganttTasks.map((t) => `${t.id}:${t.barClass ?? ""}:${t.start?.getTime() ?? ""}`).join("|"),
-    [ganttTasks],
+    () => `${narrow ? "n" : "w"}|` + ganttTasks.map((t) => `${t.id}:${t.barClass ?? ""}:${t.start?.getTime() ?? ""}`).join("|"),
+    [ganttTasks, narrow],
   );
 
   return (
-    <div className="gantt-host">
+    <div className="gantt-host" ref={hostRef}>
       <p className="sr-only" aria-live="polite">
         {lockedCount
           ? `${lockedCount} tasks are locked until their blocking invoice is paid: ${tasks
@@ -133,14 +152,16 @@ export default function ProjectGantt({ tasks, milestones }: { tasks: TaskDTO[]; 
             start={start}
             end={end}
             readonly
+            displayMode={narrow ? "chart" : "all"}
             taskTemplate={BarTemplate}
             markers={[{ start: new Date(new Date().setHours(0, 0, 0, 0)), text: "Today" }]}
             cellWidth={30}
             cellHeight={36}
             scaleHeight={32}
             columns={[
-              { id: "text", header: "Task", width: 210 },
+              { id: "text", header: "Task", width: 200 },
               { id: "role", header: "Role", width: 64, align: "center" },
+              { id: "status", header: "Status", width: 72, align: "center" },
             ]}
             scales={[
               {
