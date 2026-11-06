@@ -8,3 +8,6 @@ data/*.db*
 next-env.d.ts
 test-results/
 playwright-report/
+
+# Demo recordings
+video/
