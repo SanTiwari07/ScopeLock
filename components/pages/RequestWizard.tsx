@@ -14,7 +14,7 @@ import {
   Plus,
   Send,
   ShieldCheck,
-  Sparkles,
+  ScanText,
   Trash2,
   TriangleAlert,
   UserCheck,
@@ -151,8 +151,8 @@ export function RequestWizard() {
 
   return (
     <>
-      <PageHeader eyebrow="Change requests" title="Turn “can you also add…” into an invoice">
-        Paste what {state.project.clientName} sent. AI reads it, your rate card prices it, and you approve before anything goes to the client.
+      <PageHeader eyebrow="Change requests" title="Turn a client request into an invoice">
+        Paste what {state.project.clientName} sent. Gemini lists the work, your rate card sets the price, and nothing goes to the client until you approve it.
       </PageHeader>
 
       <WizardSteps stage={stage} />
@@ -171,7 +171,7 @@ export function RequestWizard() {
       )}
 
       {stage === 0 && (
-        <div className="fade-in grid grid-cols-1 gap-6 lg:grid-cols-[3fr_2fr]">
+        <div className="fade-in grid grid-cols-1 gap-6 xl:grid-cols-[3fr_2fr]">
           <div className="flex flex-col gap-6">
             <section aria-labelledby="samples-title">
               <h2 id="samples-title" className="t-label mb-3 text-ink-muted">
@@ -194,7 +194,7 @@ export function RequestWizard() {
                       <span className="font-bold">{s.label}</span>
                       {text === s.text && <CircleCheck size={18} className="text-brand" aria-hidden />}
                     </span>
-                    <span className="t-body-sm line-clamp-3 text-ink-muted">“{s.text}”</span>
+                    <span className="t-body-sm line-clamp-3 text-ink-muted">{s.text}</span>
                   </button>
                 ))}
               </div>
@@ -209,7 +209,7 @@ export function RequestWizard() {
                   <div id="msg-title" className="font-bold">
                     Message from {state.project.clientName}
                   </div>
-                  <div className="truncate text-ink-muted">{state.project.clientEmail || "client"} → you</div>
+                  <div className="truncate text-ink-muted">{state.project.clientEmail || "client"} to you</div>
                 </div>
                 <Mail size={18} className="text-ink-subtle" aria-hidden />
               </div>
@@ -219,7 +219,7 @@ export function RequestWizard() {
               <textarea
                 id="cr-text"
                 className="block min-h-[180px] w-full resize-y border-0 p-5 text-[17px] leading-relaxed outline-none placeholder:text-ink-subtle"
-                placeholder="Paste the client's email, Slack or WhatsApp message here, e.g. “Love it! Can we also add…”"
+                placeholder="Paste the client's email, Slack or WhatsApp message here, For example: Love it! Can we also add a gift-card page?"
                 value={text}
                 maxLength={MAX_MESSAGE_CHARS}
                 disabled={analyzing}
@@ -229,8 +229,8 @@ export function RequestWizard() {
                 <span className={clsx("t-body-sm tabular", text.length >= MAX_MESSAGE_CHARS * 0.9 ? "text-warning" : "text-ink-muted")}>
                   {text.length.toLocaleString()} / {MAX_MESSAGE_CHARS.toLocaleString()}
                 </span>
-                <Button variant="primary" size="lg" icon={<Sparkles size={20} aria-hidden />} loading={analyzing} disabled={text.trim().length < 3} onClick={analyze}>
-                  {analyzing ? "Reading the request…" : "Analyze"}
+                <Button variant="primary" size="lg" icon={<ScanText size={20} aria-hidden />} loading={analyzing} disabled={text.trim().length < 3} onClick={analyze}>
+                  {analyzing ? "Reading the request..." : "Analyze"}
                 </Button>
               </div>
               {analyzing && <div className="indeterminate !rounded-none" aria-hidden />}
@@ -241,12 +241,12 @@ export function RequestWizard() {
             <div className="panel">
               <h2 className="t-title-md">What happens when you click Analyze</h2>
               <ul className="mt-4 flex flex-col gap-4">
-                <Explainer icon={<Sparkles size={18} />} title="AI reads the message">
+                <Explainer icon={<ScanText size={18} />} title="Gemini reads the message">
                   {state.config.aiEnabled ? state.config.aiProvider : "A rule-based extractor"} lists each new piece of work, with the exact words it came
                   from.
                 </Explainer>
                 <Explainer icon={<Code2 size={18} />} title="Code prices it">
-                  Hours × your rate card. The AI never sets a price.
+                  Hours times your rate card. The model never sets a price.
                 </Explainer>
                 <Explainer icon={<UserCheck size={18} />} title="You approve">
                   Edit anything. Nothing reaches the client until you click send.
@@ -269,7 +269,7 @@ export function RequestWizard() {
       )}
 
       {stage === 1 && result && (
-        <div className="fade-in grid grid-cols-1 items-start gap-6 lg:grid-cols-[3fr_2fr]">
+        <div className="fade-in grid grid-cols-1 items-start gap-6 xl:grid-cols-[3fr_2fr]">
           <div className="flex flex-col gap-6">
             <section className="panel" aria-labelledby="said-title">
               <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -283,9 +283,9 @@ export function RequestWizard() {
                 <HighlightedQuote text={sentText} quotes={items.map((i) => i.sourceQuote).filter(Boolean)} />
               </blockquote>
               <p className="t-body-sm mt-3 flex gap-2 text-ink-muted">
-                <Sparkles size={16} className="mt-0.5 shrink-0 text-brand" aria-hidden />
+                <ScanText size={16} className="mt-0.5 shrink-0 text-brand" aria-hidden />
                 <span>
-                  <span className="font-bold text-ink">AI summary:</span> {result.extraction.summary}
+                  <span className="font-bold text-ink">Summary:</span> {result.extraction.summary}
                 </span>
               </p>
               {result.fallbackReason && <p className="t-body-sm mt-1 text-ink-muted">Fallback because: {result.fallbackReason}</p>}
@@ -330,7 +330,7 @@ export function RequestWizard() {
             )}
           </div>
 
-          <aside className="flex flex-col gap-4 lg:sticky lg:top-24">
+          <aside className="flex flex-col gap-4 xl:sticky xl:top-24">
             <section className="overflow-hidden rounded-lg border border-hairline bg-canvas shadow-raised" aria-labelledby="co-title">
               <div className="bg-navy px-6 py-4 text-white">
                 <div className="eyebrow text-brand-accent">Change order</div>
@@ -355,9 +355,9 @@ export function RequestWizard() {
                 </ul>
                 <div className="border-t border-hairline pt-4">
                   <div className="t-label text-ink-muted">Change-order total</div>
-                  <div className="t-amount-hero !text-[44px]">{formatUSD(pricing.totalCents)}</div>
+                  <div className="t-amount-hero !text-[40px] break-words">{formatUSD(pricing.totalCents)}</div>
                   <div className="t-body-sm mt-1 inline-flex items-center gap-1 text-ink-muted">
-                    <ShieldCheck size={14} aria-hidden /> Priced by code from the rate card, not by the AI
+                    <ShieldCheck size={14} aria-hidden /> Priced from your rate card, not by the model
                   </div>
                 </div>
                 {preview && preview.addedDays > 0 && (
@@ -367,7 +367,7 @@ export function RequestWizard() {
                       <span className="font-bold text-warning">
                         +{preview.addedDays} day{preview.addedDays === 1 ? "" : "s"}
                       </span>{" "}
-                      · Launch moves {formatDate(preview.endBefore)} → {formatDate(preview.endAfter)}
+                      · Launch moves from {formatDate(preview.endBefore)} to {formatDate(preview.endAfter)}
                       {preview.shifted.length > 0 && ` · ${preview.shifted.length} later tasks shift`}
                     </span>
                   </div>
@@ -377,7 +377,7 @@ export function RequestWizard() {
                   The new tasks are added to the timeline, locked until this invoice is paid.
                 </div>
                 <Button variant="primary" size="lg" className="w-full" icon={<Send size={20} aria-hidden />} loading={creating} disabled={included.length === 0} onClick={createInvoice}>
-                  {creating ? "Sending…" : "Create invoice & send"}
+                  {creating ? "Sending..." : "Create invoice & send"}
                 </Button>
                 <button
                   type="button"
@@ -518,7 +518,7 @@ function HighlightedQuote({ text, quotes }: { text: string; quotes: string[] }) 
     at = e;
   });
   parts.push(text.slice(at));
-  return <>“{parts}”</>;
+  return <>{parts}</>;
 }
 
 function ScopeItemsTable({
@@ -561,7 +561,7 @@ function ScopeItemsTable({
                 />
                 <span className="t-numeric mt-1.5 w-24 shrink-0 text-right font-bold">{formatUSD(amount)}</span>
               </div>
-              {it.sourceQuote && <div className="rounded-[4px] border-l-[3px] border-brand bg-brand-accent-soft px-2 py-1 italic">“{it.sourceQuote}”</div>}
+              {it.sourceQuote && <div className="rounded-[4px] border-l-[3px] border-brand bg-brand-accent-soft px-2 py-1 italic">&quot;{it.sourceQuote}&quot;</div>}
               <div className="flex flex-wrap items-center gap-2">
                 <select className="field field-sm !w-28" value={it.role} aria-label="Role" onChange={(e) => update(it.key, { role: e.target.value as Role })}>
                   {ROLES.map((r) => (
@@ -586,7 +586,7 @@ function ScopeItemsTable({
                   {it.confidence !== null && (
                     <span
                       className={clsx("inline-flex items-center gap-1 tabular", low ? "text-warning" : "text-ink-muted")}
-                      title={low ? "Low confidence: check this estimate" : "How sure the AI is"}
+                      title={low ? "Low confidence: check this estimate" : "Model confidence"}
                     >
                       {low && <TriangleAlert size={14} aria-hidden />}
                       <span className="inline-block h-1.5 w-12 overflow-hidden rounded-full bg-surface-sunken" aria-hidden>

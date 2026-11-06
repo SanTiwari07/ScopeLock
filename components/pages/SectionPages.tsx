@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { Sparkles } from "lucide-react";
+import { Plus } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { AGENCY_NAME } from "@/lib/brand";
@@ -22,7 +22,7 @@ function MiniStat({ label, value, tone }: { label: string; value: string; tone?:
       <div className="t-label text-ink-muted">{label}</div>
       <div
         className={clsx(
-          "t-title-lg mt-1",
+          "t-title-lg mt-1 break-words",
           tone === "success" && "text-success",
           tone === "warning" && "text-warning",
           tone === "brand" && "text-brand",
@@ -47,14 +47,14 @@ export function InvoicesPage() {
         title="Every invoice, and who still owes you"
         actions={
           <Link href={`${base}/requests`} className="btn btn-primary">
-            <Sparkles size={16} aria-hidden /> New change request
+            <Plus size={16} aria-hidden /> New change request
           </Link>
         }
       >
         Milestone and change-order invoices, all sent through PayPal Invoicing. Click <span className="font-bold text-ink">Pay as the client</span>{" "}
         to see exactly what {state.project.clientName} sees.
       </PageHeader>
-      <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="mb-6 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 xl:grid-cols-4">
         <MiniStat label="Awaiting payment" value={formatUSD(t.awaiting)} tone="warning" />
         <MiniStat label="Collected" value={formatUSD(t.collected)} tone="success" />
         <MiniStat label="Extra work billed" value={formatUSD(t.extras)} tone="brand" />
@@ -105,7 +105,7 @@ export function TeamPage() {
             {margin / 100}%
           </div>
         </div>
-        <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-4">
           {state.contractors.map((c) => (
             <li key={c.id} className="flex items-center gap-3 rounded-md bg-surface-warm p-3">
               <Avatar name={c.name} role={c.role} size={36} />
@@ -149,9 +149,9 @@ export function LedgerPage() {
     <>
       <PageHeader eyebrow="Money log" title="Every dollar in and out">
         Invoices, payments and payouts in one place, each with its PayPal reference ID. Try the <span className="font-bold text-ink">Ask</span> box:
-        “unpaid invoices over $1,000”.
+        &quot;unpaid invoices over $1,000&quot;.
       </PageHeader>
-      <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="mb-6 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 xl:grid-cols-4">
         <MiniStat label="Money in" value={formatUSD(t.collected)} tone="success" />
         <MiniStat label="Paid to team" value={formatUSD(t.paidOut)} />
         <MiniStat label="Still owed" value={formatUSD(t.awaiting)} tone="warning" />

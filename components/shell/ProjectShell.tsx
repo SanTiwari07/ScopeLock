@@ -13,7 +13,7 @@ import {
   LayoutDashboard,
   RotateCcw,
   ShieldCheck,
-  Sparkles,
+  MessageSquareText,
   Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -100,7 +100,7 @@ function ShellInner({ projectId, children }: { projectId: string; children: Reac
         ) : (
           <div className="w-full max-w-md rounded-lg bg-white/5 p-8 text-white ring-1 ring-white/10">
             <Wordmark inverse />
-            <p className="t-body-lg mt-4">{slow ? "Waking up the demo server (about a minute on the free tier)…" : "Loading your project…"}</p>
+            <p className="t-body-lg mt-4">{slow ? "Waking up the demo server. This takes about a minute on the free tier." : "Loading your project..."}</p>
             <div className="indeterminate mt-4 !bg-white/20" />
           </div>
         )}
@@ -115,7 +115,7 @@ function ShellInner({ projectId, children }: { projectId: string; children: Reac
 
   const nav = [
     { href: base, label: "Overview", Icon: LayoutDashboard },
-    { href: `${base}/requests`, label: "Change requests", Icon: Sparkles },
+    { href: `${base}/requests`, label: "Change requests", Icon: MessageSquareText },
     { href: `${base}/invoices`, label: "Invoices", Icon: FileText, count: openInvoices },
     { href: `${base}/team`, label: "Pay the team", Icon: Users, count: toPayOut },
     { href: `${base}/ledger`, label: "Money log", Icon: BookOpenText },
@@ -212,9 +212,9 @@ function ShellInner({ projectId, children }: { projectId: string; children: Reac
               <span className="font-bold text-ink">{current.label}</span>
             </div>
             <div className="ml-auto flex items-center gap-2">
-              <span className="t-label hidden items-center gap-2 rounded-full bg-surface-tint px-3 py-1.5 sm:inline-flex" title="You are the agency running this project">
-                <span className="h-2 w-2 rounded-full bg-success" aria-hidden />
-                Agency view · {AGENCY_NAME}
+              <span className="t-label hidden items-center gap-2 rounded-full bg-surface-tint px-3 py-1.5 whitespace-nowrap sm:inline-flex" title={`You are ${AGENCY_NAME}, the agency running this project`}>
+                <span className="h-2 w-2 shrink-0 rounded-full bg-success" aria-hidden />
+                Agency view<span className="hidden xl:inline"> · {AGENCY_NAME}</span>
               </span>
               <button
                 type="button"

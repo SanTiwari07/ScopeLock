@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { ArrowRight, Check, CircleDollarSign, Clock, Lock, PartyPopper, Sparkles, Unlock } from "lucide-react";
+import { ArrowRight, Check, CircleDollarSign, Clock, FilePlus2, Lock, Unlock } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import type { ProjectState } from "@/lib/api-types";
@@ -59,16 +59,16 @@ export function OverviewPage() {
       <NextActionHero />
 
       {/* KPIs */}
-      <section aria-label="Money at a glance" className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <section aria-label="Money at a glance" className="mt-6 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 xl:grid-cols-4">
         <Kpi icon={<CircleDollarSign size={18} />} label="Project value" value={formatUSD(t.contract)} hint="Milestones + approved extras" />
         <Kpi icon={<Check size={18} />} tone="success" label="Collected" value={formatUSD(t.collected)} hint="Paid through PayPal" />
         <Kpi icon={<Clock size={18} />} tone="warning" label="Awaiting payment" value={formatUSD(t.awaiting)} hint="Invoices sent, not yet paid" />
         <Kpi
-          icon={<Sparkles size={18} />}
+          icon={<FilePlus2 size={18} />}
           tone="brand"
           label="Extra work billed"
           value={formatUSD(t.extras)}
-          hint={t.extrasCount ? `${t.extrasCount} change order${t.extrasCount === 1 ? "" : "s"} that would have been free` : "No change orders yet"}
+          hint={t.extrasCount ? `${t.extrasCount} change order${t.extrasCount === 1 ? "" : "s"} invoiced` : "No change orders yet"}
         />
       </section>
 
@@ -86,16 +86,16 @@ export function OverviewPage() {
             const lockedHere = tasks.filter((x) => x.locked).length;
             return (
               <li key={m.id} className="panel !p-5">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div className="min-w-0">
                     <div className="t-label text-ink-muted">Milestone {m.seq}</div>
                     <div className="t-title-lg">{m.title}</div>
                   </div>
                   <StatusBadge value={m.status} />
                 </div>
-                <div className="mt-3 flex items-end justify-between">
+                <div className="mt-3 flex flex-wrap items-end justify-between gap-x-3 gap-y-1">
                   <span className="t-title-md tabular">{formatUSD(m.amountCents)}</span>
-                  <span className="t-body-sm inline-flex items-center gap-1 text-ink-muted">
+                  <span className="t-body-sm inline-flex items-center gap-1 whitespace-nowrap text-ink-muted">
                     {lockedHere ? <Lock size={14} aria-hidden /> : <Unlock size={14} aria-hidden />}
                     {tasks.length} tasks{lockedHere ? ` · ${lockedHere} locked` : ""}
                   </span>
@@ -126,14 +126,14 @@ export function OverviewPage() {
       </section>
 
       {/* Team + activity */}
-      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[2fr_3fr]">
+      <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[2fr_3fr]">
         <section className="panel" aria-labelledby="team-title">
           <div className="mb-4 flex items-center justify-between">
             <h2 id="team-title" className="t-title-md">
               Your team
             </h2>
             <Link href={`${base}/team`} className="t-body-sm font-bold text-link hover:underline">
-              Pay the team →
+              Pay the team
             </Link>
           </div>
           <ul className="flex flex-col gap-3">
@@ -160,7 +160,7 @@ export function OverviewPage() {
               Latest activity
             </h2>
             <Link href={`${base}/ledger`} className="t-body-sm font-bold text-link hover:underline">
-              Money log →
+              Money log
             </Link>
           </div>
           <ol className="relative ml-1 border-l border-hairline">
@@ -204,7 +204,7 @@ export function NextActionHero({ compact }: { compact?: boolean }) {
     >
       <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
       <div className="relative">
-        <ol className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <ol className="mb-6 grid grid-cols-2 gap-2 xl:grid-cols-4">
           {JOURNEY_STEPS.map((s, i) => {
             const isDone = i < j.step;
             const cur = i === j.step;
@@ -213,7 +213,7 @@ export function NextActionHero({ compact }: { compact?: boolean }) {
                 key={s.title}
                 aria-current={cur ? "step" : undefined}
                 className={clsx(
-                  "flex items-center gap-2.5 rounded-sm px-3 py-2",
+                  "flex min-w-0 items-center gap-2.5 rounded-sm px-3 py-2",
                   cur ? "bg-white text-navy" : isDone ? "bg-white/15" : "bg-white/[0.06] text-white/60",
                 )}
               >
@@ -227,8 +227,8 @@ export function NextActionHero({ compact }: { compact?: boolean }) {
                   {isDone ? <Check size={14} strokeWidth={3} /> : i + 1}
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-sm font-bold">{s.title}</span>
-                  <span className={clsx("block truncate text-xs", cur ? "text-navy/60" : "text-white/60")}>{isDone ? "Done" : s.hint}</span>
+                  <span className="block text-sm leading-tight font-bold">{s.title}</span>
+                  <span className={clsx("mt-0.5 block text-xs leading-tight", cur ? "text-navy/60" : "text-white/60")}>{isDone ? "Done" : s.hint}</span>
                 </span>
               </li>
             );
@@ -238,8 +238,7 @@ export function NextActionHero({ compact }: { compact?: boolean }) {
           <div className="max-w-2xl">
             <div className="eyebrow mb-1 text-brand-accent">{done ? "All done" : "Next step"}</div>
             <h2 className={clsx("font-display font-black tracking-[-0.03em]", compact ? "text-2xl" : "text-3xl sm:text-4xl")}>
-              {(celebrate || done) && <PartyPopper size={compact ? 24 : 32} className="mr-2 inline align-[-4px]" aria-hidden />}
-              {j.next.title}
+                            {j.next.title}
             </h2>
             <p className="t-body-lg mt-2 text-white/85">{j.next.body}</p>
           </div>
@@ -267,10 +266,10 @@ function Kpi({
 }) {
   return (
     <div className="kpi">
-      <div className="flex items-center gap-2">
+      <div className="flex min-w-0 items-center gap-2">
         <span
           className={clsx(
-            "flex h-8 w-8 items-center justify-center rounded-full",
+            "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
             tone === "success" ? "bg-success-soft text-success" : tone === "warning" ? "bg-warning-soft text-warning" : tone === "brand" ? "bg-brand-accent-soft text-brand" : "bg-surface-tint text-ink",
           )}
           aria-hidden
@@ -279,7 +278,7 @@ function Kpi({
         </span>
         <span className="t-label text-ink-muted">{label}</span>
       </div>
-      <div className="t-title-lg mt-3">{value}</div>
+      <div className="t-title-lg mt-3 break-words">{value}</div>
       <div className="t-body-sm mt-0.5 text-ink-muted">{hint}</div>
     </div>
   );

@@ -165,7 +165,7 @@ function PayoutDetail({
   const basis = preview.capturedCents ?? sharesTotal + preview.marginCents;
 
   return (
-    <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+    <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">
       <div className="flex flex-col gap-4">
         {/* 1. Split */}
         <div>
@@ -201,9 +201,8 @@ function PayoutDetail({
                       </span>
                       <div className="min-w-0">
                         <div className="font-bold">{s.name}</div>
-                        <div className="truncate text-ink-muted">
-                          {s.title} · {s.email || "no email"}
-                        </div>
+                        <div className="text-ink-muted">{s.title}</div>
+                        <div className="t-body-sm break-all text-ink-subtle">{s.email || "no email"}</div>
                       </div>
                     </div>
                   </td>
@@ -249,7 +248,7 @@ function PayoutDetail({
               disabled={!preview.canPay}
               onClick={pay}
             >
-              {sending ? "Sending…" : `Pay contractors ${formatUSD(sharesTotal)}`}
+              {sending ? "Sending..." : `Pay contractors ${formatUSD(sharesTotal)}`}
             </Button>
             {!preview.canPay && (
               <p className="t-body-sm text-center text-danger">
