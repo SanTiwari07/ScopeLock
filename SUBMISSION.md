@@ -3,7 +3,7 @@
 **Build What's Next with PayPal and AI**
 
 - Code: https://github.com/Shambhavi500/ScopeLock
-- Live demo: _add the Render URL after deploying_
+- Live demo: https://scopelock-536j.onrender.com (free tier, so the first load after a quiet spell can take about a minute)
 - Demo video: _add the YouTube or Drive link after uploading `video/scopelock-demo.mp4`_
 
 ## One line

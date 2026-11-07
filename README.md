@@ -4,7 +4,7 @@
 
 Built for *Build What's Next with PayPal and AI*. Sandbox only, no real money.
 
-> **Hosted demo:** _add the Render URL here_. The free tier sleeps after 15 minutes idle, so the first load can take about a minute.
+> **Hosted demo:** https://scopelock-536j.onrender.com. The free tier sleeps after 15 minutes idle, so the first load can take about a minute.
 
 ## What it does
 
