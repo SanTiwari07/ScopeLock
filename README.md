@@ -86,31 +86,21 @@ It is friendly, and it is about $1,700 of work. To charge for it you have to sco
 
 ## The loop, step by step
 
-Open any step to see it. Click a screenshot for the full-size image.
+Click any screenshot for the full-size image.
 
-<details open>
-<summary><b>1. Paste the client's message</b></summary>
-<br>
+### 1. Paste the client's message
 
 Paste what the client sent, or pick one of three samples: new features with a deadline, a simple add-on, or vague feedback. Gemini 2.5 Flash turns it into structured work items with a title, role, hours, confidence, whether it was already in scope, and the exact quote it came from.
 
-<a href="docs/screenshots/04-request-message.jpg"><img src="docs/screenshots/04-request-message.jpg" alt="Change requests page with the sample client message pasted in, the rate card, and an explanation of what happens on Analyze" width="100%"></a>
+<p align="center"><a href="docs/screenshots/04-request-message.jpg"><img src="docs/screenshots/04-request-message.jpg" alt="Change requests page with the sample client message pasted in, the rate card, and an explanation of what happens on Analyze" width="75%"></a></p>
 
-</details>
-
-<details>
-<summary><b>2. Review and price</b></summary>
-<br>
+### 2. Review and price
 
 Every phrase that produced work is highlighted in the original message. You can untick anything you will do for free, or change the role and hours, and the price updates. Prices come from the project's rate card, never from the model. The panel on the right shows how far the new work pushes launch.
 
-<a href="docs/screenshots/05-review-and-price.jpg"><img src="docs/screenshots/05-review-and-price.jpg" alt="Review and price: three work items with source quotes, a $1,700.00 change-order total, and a notice that launch moves by four days" width="100%"></a>
+<p align="center"><a href="docs/screenshots/05-review-and-price.jpg"><img src="docs/screenshots/05-review-and-price.jpg" alt="Review and price: three work items with source quotes, a $1,700.00 change-order total, and a notice that launch moves by four days" width="75%"></a></p>
 
-</details>
-
-<details>
-<summary><b>3. Send the invoice, and the work goes on the timeline locked</b></summary>
-<br>
+### 3. Send the invoice, and the work goes on the timeline locked
 
 One click creates and sends a PayPal invoice through Invoicing v2. The new tasks appear on the Gantt chart with a padlock, and everything downstream shifts.
 
@@ -121,11 +111,7 @@ One click creates and sends a PayPal invoice through Invoicing v2. The new tasks
 </tr>
 </table>
 
-</details>
-
-<details>
-<summary><b>4. The client pays, and a declined card is handled</b></summary>
-<br>
+### 4. The client pays, and a declined card is handled
 
 The client sees an itemised pay page. Orders are created and captured on the server through Orders v2, with the PayPal JS SDK v6 button in the browser. A demo control forces `INSTRUMENT_DECLINED` through the `PayPal-Mock-Response` header, so you can see the failure and the retry.
 
@@ -137,21 +123,13 @@ The client sees an itemised pay page. Orders are created and captured on the ser
 </tr>
 </table>
 
-</details>
-
-<details>
-<summary><b>5. The work unlocks</b></summary>
-<br>
+### 5. The work unlocks
 
 The capture is recorded on the PayPal invoice and the three tasks open up. The Launch phase stays locked, because it waits on its own invoice: paying for the extras does not pay for the Build milestone.
 
-<a href="docs/screenshots/12b-timeline-unlocked.jpg"><img src="docs/screenshots/12b-timeline-unlocked.jpg" alt="Gantt chart after payment: the three change-order tasks are open and the Launch phase is still locked" width="100%"></a>
+<p align="center"><a href="docs/screenshots/12b-timeline-unlocked.jpg"><img src="docs/screenshots/12b-timeline-unlocked.jpg" alt="Gantt chart after payment: the three change-order tasks are open and the Launch phase is still locked" width="75%"></a></p>
 
-</details>
-
-<details>
-<summary><b>6. Pay the team</b></summary>
-<br>
+### 6. Pay the team
 
 Six deterministic checks run, then a single Payouts v1 batch splits the money across three contractors and the agency keeps its margin. If any check fails, the button is disabled.
 
@@ -162,25 +140,19 @@ Six deterministic checks run, then a single Payouts v1 batch splits the money ac
 </tr>
 </table>
 
-</details>
-
-<details>
-<summary><b>7. Keep the record</b></summary>
-<br>
+### 7. Keep the record
 
 An AG Grid ledger lists every invoice, payment and payout with its PayPal reference, plus quick search, a plain-English filter, totals and CSV export.
 
-<a href="docs/screenshots/16-money-log.jpg"><img src="docs/screenshots/16-money-log.jpg" alt="Money log: invoices, payments and payouts with reference IDs, amounts and status" width="100%"></a>
-
-</details>
+<p align="center"><a href="docs/screenshots/16-money-log.jpg"><img src="docs/screenshots/16-money-log.jpg" alt="Money log: invoices, payments and payouts with reference IDs, amounts and status" width="75%"></a></p>
 
 ## One request in numbers
 
 The sample message above, followed through the code.
 
-<details open>
-<summary><b>Pricing</b>: hours rounded to the nearest half hour, multiplied by the role's rate</summary>
-<br>
+### Pricing
+
+Hours rounded to the nearest half hour, multiplied by the role's rate.
 
 | Work item | Quote it came from | Role | Hours | Rate | Amount |
 |---|---|---|---:|---:|---:|
@@ -189,11 +161,9 @@ The sample message above, followed through the code.
 | QA for new features | "Need it before the holiday launch" | QA | 3 | $60 | $180.00 |
 | | | | | **Total** | **$1,700.00** |
 
-</details>
+### Schedule
 
-<details>
-<summary><b>Schedule</b>: each item becomes a task at 6 productive hours a day</summary>
-<br>
+Each item becomes a task at 6 productive hours a day.
 
 | Task | Hours | Days |
 |---|---:|---:|
@@ -204,11 +174,9 @@ The sample message above, followed through the code.
 
 The new tasks are chained after the milestone's last task, and every task that depends on it moves right by the same amount.
 
-</details>
+### Payout
 
-<details>
-<summary><b>Payout</b>: margin off the top, the rest shared by split, rounded so it always adds up</summary>
-<br>
+Margin off the top, the rest shared by split, rounded so it always adds up.
 
 | Recipient | Share of the pool | Share of the total | Amount |
 |---|---:|---:|---:|
@@ -220,66 +188,21 @@ The new tasks are chained after the milestone's last task, and every task that d
 
 Rounding uses the largest-remainder method over integer cents, so margin plus shares always equals the captured amount exactly.
 
-</details>
-
 ## What could go wrong
 
-Open a question to see how ScopeLock answers it.
+| If this happens | What ScopeLock does | Code |
+|---|---|---|
+| The model invents a work item the client never asked for | Every item must carry a `sourceQuote`, and any item whose quote is not in the client's message is dropped. | [`parse.ts`](lib/ai/parse.ts) |
+| The model returns broken JSON, or Gemini is down or rate limited | Invalid output is retried once with the error attached. A second failure, a timeout or a provider error hands over to a rule-based extractor, and the screen says why. | [`extract.ts`](lib/ai/extract.ts) |
+| The client's message tries to instruct the model | The message is treated as untrusted data. The output is a validated list of items, and the model cannot set a price, call PayPal or approve anything. | [`prompts.ts`](lib/ai/prompts.ts) |
+| The client pays twice | An already paid invoice returns `409 ALREADY_PAID` before PayPal is called, and PayPal's own `invoice_id` guard maps to the same error. | [`payments.ts`](lib/app/payments.ts) |
+| The card is declined | The payment is recorded as `DECLINED`, no money is taken, and the client gets a retry with a new idempotency key. | [`payments.ts`](lib/app/payments.ts) |
+| The network drops halfway through a PayPal call | Every POST must carry a `PayPal-Request-Id` built from our record IDs, so a retry replays the operation instead of repeating it. | [`request.ts`](lib/paypal/request.ts) |
+| Someone presses Pay contractors twice | Three layers stop it: a `409` from the server, a unique database constraint on the batch's `invoice_id`, and PayPal's `sender_batch_id`. | [`payouts.ts`](lib/app/payouts.ts) |
+| A payout does not add up, goes to a bad address, or is too large | All six checks below must pass, and the server runs them again when the batch is sent. | [`checks.ts`](lib/domain/checks.ts) |
+| Floating-point arithmetic loses a cent | Money is integer cents everywhere, and becomes a decimal string only at the PayPal boundary. | [`money.ts`](lib/domain/money.ts) |
 
-<details>
-<summary><b>The model invents a work item the client never asked for.</b></summary>
-<br>
-
-Every item must carry a `sourceQuote`, and any item whose quote is not actually in the client's message is dropped. See [`lib/ai/parse.ts`](lib/ai/parse.ts).
-</details>
-
-<details>
-<summary><b>The model returns broken JSON, or Gemini is down or rate limited.</b></summary>
-<br>
-
-Invalid output is retried once with the error attached. A second failure, a timeout or a provider error falls through to a rule-based extractor, and the screen says so and why. The three sample messages also have known-good extractions for this case. See [`lib/ai/extract.ts`](lib/ai/extract.ts).
-</details>
-
-<details>
-<summary><b>The client's message tries to instruct the model.</b></summary>
-<br>
-
-The message is treated as untrusted data. The model's only output is a Zod-validated list of items, and it has no way to set a price, call PayPal or approve anything.
-</details>
-
-<details>
-<summary><b>The client pays twice.</b></summary>
-<br>
-
-An already paid invoice returns `409 ALREADY_PAID` before PayPal is called, and PayPal's own `invoice_id` guard is mapped to the same error. See [`lib/app/payments.ts`](lib/app/payments.ts).
-</details>
-
-<details>
-<summary><b>The card is declined.</b></summary>
-<br>
-
-The payment is recorded as `DECLINED`, the event is logged, no money is taken, and the client gets a retry. Each attempt uses a new idempotency key built from the invoice and attempt number.
-</details>
-
-<details>
-<summary><b>The network drops halfway through a PayPal call, and the request is retried.</b></summary>
-<br>
-
-Every PayPal POST must carry a `PayPal-Request-Id` derived from our own record IDs, and the request wrapper throws if one is missing. A retry replays the same operation rather than repeating it. See [`lib/paypal/request.ts`](lib/paypal/request.ts).
-</details>
-
-<details>
-<summary><b>Someone presses Pay contractors twice.</b></summary>
-<br>
-
-Three layers stop it: a `409` from the server, a unique database constraint on the batch's `invoice_id`, and PayPal's `sender_batch_id`. See [`lib/app/payouts.ts`](lib/app/payouts.ts).
-</details>
-
-<details>
-<summary><b>A payout does not add up, or goes to a bad address, or is too large.</b></summary>
-<br>
-
-All six checks must pass, and the server runs them again when the batch is sent, so disabling a button in the browser is not the only protection.
+### The six checks before a payout
 
 | Check | Passes when |
 |---|---|
@@ -289,16 +212,6 @@ All six checks must pass, and the server runs them again when the batch is sent,
 | Every contractor has a payout email | At least one share, and every email is valid |
 | Not already paid out | No batch exists for this invoice |
 | Each payout is under the cap | No share exceeds `PAYOUT_CAP_CENTS` ($5,000 by default) |
-
-See [`lib/domain/checks.ts`](lib/domain/checks.ts).
-</details>
-
-<details>
-<summary><b>Floating-point arithmetic loses a cent.</b></summary>
-<br>
-
-Money is integer cents everywhere, and it becomes a decimal string only at the PayPal boundary. See [`lib/domain/money.ts`](lib/domain/money.ts).
-</details>
 
 ### Where the model sits, and where it does not
 
@@ -394,9 +307,7 @@ flowchart LR
 | JS SDK v6 | The PayPal button on the client's pay page | Not applicable |
 | Payouts v1 | Splitting each payment between contractors | `sender_batch_id` of `co-{invoice}` |
 
-<details>
-<summary><b>Built with</b></summary>
-<br>
+### Built with
 
 | Layer | Tools |
 |---|---|
@@ -408,11 +319,7 @@ flowchart LR
 | Tests | Vitest, Playwright |
 | Hosting | Render |
 
-</details>
-
-<details>
-<summary><b>Project map</b></summary>
-<br>
+### Project map
 
 ```text
 app/                 Pages and API route handlers
@@ -433,8 +340,6 @@ tests/
   e2e/               Playwright
 scripts/             PayPal sandbox smoke test
 ```
-
-</details>
 
 <p align="right"><a href="#top">Back to top</a></p>
 
@@ -500,9 +405,7 @@ npm run dev
 
 Open <http://localhost:3000>. The database re-seeds every time the server starts, and <kbd>Reset demo</kbd> restores the starting state.
 
-<details>
-<summary><b>Connect the real PayPal sandbox</b></summary>
-<br>
+### Connect the real PayPal sandbox
 
 1. Create an app at [developer.paypal.com](https://developer.paypal.com) under Apps & Credentials, Sandbox.
 2. Make sure Payouts is enabled on the sandbox business account.
@@ -521,11 +424,7 @@ Open <http://localhost:3000>. The database re-seeds every time the server starts
 npm run smoke
 ```
 
-</details>
-
-<details>
-<summary><b>Connect Gemini</b></summary>
-<br>
+### Connect Gemini
 
 Get a free key at [aistudio.google.com](https://aistudio.google.com/apikey) and set it in `.env`:
 
@@ -536,23 +435,13 @@ GEMINI_MODEL=gemini-2.5-flash
 
 Check the connection at `/health`.
 
-</details>
-
-<details>
-<summary><b>What the simulator does</b></summary>
-<br>
+### What the simulator does
 
 [`lib/paypal/sim.ts`](lib/paypal/sim.ts) answers the same REST paths with the same response shapes, idempotency replay, mock-response failures and duplicate guards. The UI labels this mode clearly. It exists for offline development and tests.
 
-</details>
-
-<details>
-<summary><b>Deploy on Render</b></summary>
-<br>
+### Deploy on Render
 
 [`render.yaml`](render.yaml) defines a free Node web service. Set `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `GEMINI_API_KEY` and the sandbox emails in the Render dashboard, and never commit them. The free disk is wiped when the service sleeps, so every cold start is a fresh demo.
-
-</details>
 
 ### Commands
 
