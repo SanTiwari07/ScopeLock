@@ -480,6 +480,6 @@ This is a hackathon build, and these are the honest edges:
 
 ## Credits and licence
 
-The original project is [Shambhavi500/ScopeLock](https://github.com/Shambhavi500/ScopeLock), and this repository is a fork of it. Released under the [MIT licence](LICENSE). All data in this project is fake.
+Built by team **HoloDuet**: [Sanskar Tiwari](https://github.com/SanTiwari07) and [Shambhavi Patil](https://github.com/Shambhavi500). Development began in the team's first repository, [Shambhavi500/ScopeLock](https://github.com/Shambhavi500/ScopeLock), and this repository is where the team's submission lives. Released under the [MIT licence](LICENSE). All data in this project is fake.
 
 <p align="right"><a href="#top">Back to top</a></p>
